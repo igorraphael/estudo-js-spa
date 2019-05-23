@@ -8,14 +8,14 @@
  
     if (isset($_POST['action']) && !empty($_POST['action'])) {
         switch($_POST['action']) {
-            case 'go':
-                $_page = $_POST['page'] . '.inc';
-                break;
+            // case 'go':
+            //     $_page = $_POST['page'] . '.inc';
+            //     break;
             default:
                 $ctrl_name = ucfirst($_POST['mod']);
                 if(class_exists($ctrl_name)) {
                     $_controller = new $ctrl_name();
-                    $_response = $_controller->run();
+                    $_response = $_controller->index();
                 }
         }
         

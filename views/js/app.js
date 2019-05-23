@@ -36,9 +36,11 @@ function createWindow(){
     $.ajax({
         type: "POST",
         url: "",
-        data: {mod:'teste',action: 'all'},
+        data: {mod:'window',action: 'getWindows'},
         error: function() { alert("Não foi possível atender sua requisição."); },
-        success: function(data, textStatus, jqXHR) { console.log(data)}
+        success: function(data, textStatus, jqXHR) { 
+            console.log(jqXHR);
+        }
        
         });
 
