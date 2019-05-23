@@ -1,12 +1,10 @@
 <?php
     //init.php
-    $_APP_PATH['root'] = $_SERVER['DOCUMENT_ROOT'] . '/project/';
-    $_APP_PATH['sys'] = $_APP_PATH['root'] . 'sys/';
-    $_APP_PATH['views'] = $_APP_PATH['root'] . 'views/';
+    $_PATH['root'] = $_SERVER['DOCUMENT_ROOT'] . '/project/';
+    $_PATH['sys'] = $_PATH['root'] . 'sys/';
+    $_PATH['views'] = $_PATH['root'] . 'views/';
 
     require_once('autoloader.php');
-    //
-
  
     if (isset($_POST['action']) && !empty($_POST['action'])) {
         switch($_POST['action']) {
@@ -33,6 +31,6 @@
 
 
     header('Content-type: text/html; charset=utf-8');
-    require_once($_APP_PATH['views'] . (isset($_page) ? $_page : 'index.html'));
+    require_once($_PATH['views'] . (isset($_page) ? $_page : 'index.html'));
 
     exit;
