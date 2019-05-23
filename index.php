@@ -1,7 +1,9 @@
 <?php
     //init.php
     $_APP_PATH['root'] = $_SERVER['DOCUMENT_ROOT'] . '/project/';
+    $_APP_PATH['sys'] = $_APP_PATH['root'] . 'sys/';
     $_APP_PATH['views'] = $_APP_PATH['root'] . 'views/';
+
     require_once('autoloader.php');
     //
 
@@ -28,11 +30,7 @@
         }
     }
 
-    // if(isset($_POST) && !empty($_POST) ){
-    //     echo "<pre>";
-    //     print_r($_POST);
-    //     echo "</pre>";
-    // }
+
 
     header('Content-type: text/html; charset=utf-8');
     require_once($_APP_PATH['views'] . (isset($_page) ? $_page : 'index.html'));
