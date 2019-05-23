@@ -29,9 +29,6 @@ function createHeader(){
 
 //create window
 function createWindow(){
-    var fragment = document.createDocumentFragment();
-    var myWindow = fragment.appendChild(document.createElement('div'));
-    myWindow.className = 'window'; 
     //post
     $.ajax({
         type: "POST",
@@ -39,13 +36,40 @@ function createWindow(){
         data: {mod:'window',action: 'getWindows'},
         error: function() { alert("Não foi possível atender sua requisição."); },
         success: function(data, textStatus, jqXHR) { 
-            console.log(jqXHR);
+            //fragmento-div
+            console.log(data);
+            var fragment, div, i, campo, h1, form;
+
+            fragment = document.createDocumentFragment();
+            div = fragment.appendChild(document.createElement('div'));
+            div.classList.add('window');
+            h1 = div.appendChild( document.createElement('h1') );
+            h1.innerHTML = data[0]['nome_window'];
+            form = div.appendChild( document.createElement('form'));
+            form.classList.add('form');
+            for (i = 0; i < data.length; i++) {
+                var tipoCampo = separatorType( data[i]['campo_type'], 'type' );
+                campo = div.appendChild(document.createElement('input'));
+                campo.setAttribute('type',  separatorType( data[i]['campo_type'], 'type' ) );
+                if(campo.type == 'radio'){//para os radios
+                    campo.name = 'genero';
+                    campo.value = data[i]['title_campo'];
+                    campo.innerHTML = data[i]['title_campo'];
+                }else if(campo.type == 'button'){ //caso for button
+                    campo.classList.add('myButton');
+                    campo.value = data[i]['title_campo'];
+                    campo.onclick = function (){alert('clicou no botao para cadastrar...');} 
+                }else{
+                    campo.placeholder = data[i]['title_campo'];
+                }             
+            }
+            $(div).draggable();
+            content.appendChild(fragment);
         }
        
         });
 
-    //$(myWindow).draggable();
-    content.appendChild(fragment);
+    
 }
 
 //footer
@@ -58,6 +82,15 @@ function createBarWindow(){
     }
 }
 
+function separatorType(campo_type, retorno){
+    var type_field = campo_type.split("-");
+    if(retorno == 'type'){
+        return type_field[1];
+    }else{
+        return type_field[0];
+    }
+    
+}
 
 
 function windowFocus(context){
