@@ -15,7 +15,7 @@
                 $ctrl_name = ucfirst($_POST['mod']);
                 if(class_exists($ctrl_name)) {
                     $_controller = new $ctrl_name();
-                    $_response = $_controller->index();
+                    $_response = $_controller->init();
                 }
         }
         

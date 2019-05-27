@@ -13,8 +13,17 @@ $(document).ready(function () {
 
 
 });
+
 //header
 function createHeader() {
+    
+    $.ajax({
+        type: 'POST', url: '',dataType: 'application/json', data: { mod: 'window', action: 'getNameWindow' },
+        error: function (xhr, textStatus, error) { alert("Não foi possível atender sua requisição.");console.log(xhr.statusText);console.log(textStatus);console.log(error); },
+        success: function (data, textStatus, jqXHR) {
+            console.log(data);
+        }
+    });
     var headerNav = ['Cadastro', 'Relatorio', 'Finanças'];
     var header = document.body.appendChild(document.createElement('nav'));
     header.classList.add('header');
@@ -36,6 +45,7 @@ function createWindow() {
         data: { mod: 'window', action: 'getWindows' },
         error: function () { alert("Não foi possível atender sua requisição."); },
         success: function (data, textStatus, jqXHR) {
+            console.log(data);
             //fragmento-div
             var fragment, div, i, campo, h1, form;
             fragment = document.createDocumentFragment();
