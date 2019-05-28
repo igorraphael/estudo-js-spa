@@ -1,5 +1,5 @@
 'use strict';
-var content;
+var content, windowsOpen = [];
 
 $(document).ready(function () {
     content = document.body.appendChild(document.createElement('div'));
@@ -11,7 +11,7 @@ $(document).ready(function () {
         alert('cliclou no ' + this.innerHTML);
         createWindow();
     });
-
+    //console.log(windowsOpen);
 
 });
 //function create header
@@ -37,53 +37,59 @@ function createHeader() {
 
 //create window
 function createWindow(nameWindow) {
-    //post
-    $.ajax({
-        type: "POST",
-        url: "",
-        data: { mod: 'window', action: 'getWindows', param: nameWindow },
-        error: function () { alert("Não foi possível atender sua requisição."); },
-        success: function (data, textStatus, jqXHR) {
-            if(data.indexOf('Nenhum') != -1) { //Caso não exista campos para criar janela..
-                alert(data);
-            }else{
-                //fragmento-div
-                var fragment, div, i, campo, h1, form;
-                fragment = document.createDocumentFragment();
-                div = fragment.appendChild(document.createElement('div'));
-                div.setAttribute("id", data[0].nome_window.replace(/ /g, "_") );
-                div.classList.add('window');
-                h1 = div.appendChild(document.createElement('h1'));
-                h1.innerHTML = data[0]['nome_window'];
-                form = div.appendChild(document.createElement('form'));
-                form.classList.add('form');
-                for (i = 0; i < data.length; i++) {
-                    var tipoCampo = separatorType(data[i]['campo_type'], 'type');
-                    campo = div.appendChild(document.createElement('input'));
-                    campo.setAttribute('type', separatorType(data[i]['campo_type'], 'type'));
-                    if (campo.type == 'radio') {//para os radios
-                        campo.name = 'genero';
-                        campo.value = data[i]['title_campo'];
-                        campo.innerHTML = data[i]['title_campo'];
-                    } else if (campo.type == 'button') { //caso for button
-                        campo.classList.add('myButton');
-                        campo.value = data[i]['title_campo'];
-                        campo.onclick = function () { alert('clicou no botao para cadastrar...'); }
-                    } else {
-                        campo.placeholder = data[i]['title_campo'];
-                        if (campo.placeholder == 'Money') {//if true add class in input
-                            campo.classList.add('inpMoney');
-                            campo.setAttribute("onkeypress", "return onlyNumbers(event)");
-                            campo.setAttribute("size", "10");
+    if(windowsOpen.indexOf(nameWindow.replace(/ /g, "_")) != -1){
+        alert('Janela está aberta');
+    }else{
+        $.ajax({
+            type: "POST",
+            url: "",
+            data: { mod: 'window', action: 'getWindows', param: nameWindow },
+            error: function () { alert("Não foi possível atender sua requisição."); },
+            success: function (data, textStatus, jqXHR) {
+                if(data.indexOf('Nenhum') != -1) { //Caso não exista campos para criar janela..
+                    alert(data);
+                }else{
+                    //fragmento-div
+                    windowsOpen.push( data[0].nome_window.replace(/ /g, "_") );
+                    var fragment, div, i, campo, h1, form, btnClose;
+                    fragment = document.createDocumentFragment();
+                    div = fragment.appendChild(document.createElement('div'));
+                    btnClose = div.appendChild( document.createElement('span') );
+                    btnClose.classList.add('btn', 'btn-close');
+                    div.setAttribute("id", data[0].nome_window.replace(/ /g, "_") );
+                    div.classList.add('window');
+                    h1 = div.appendChild(document.createElement('h1'));
+                    h1.innerHTML = data[0]['nome_window'];
+                    form = div.appendChild(document.createElement('form'));
+                    form.classList.add('form');
+                    for (i = 0; i < data.length; i++) {
+                        var tipoCampo = separatorType(data[i]['campo_type'], 'type');
+                        campo = form.appendChild(document.createElement('input'));
+                        campo.setAttribute('type', separatorType(data[i]['campo_type'], 'type'));
+                        if (campo.type == 'radio') {//para os radios
+                            campo.name = 'genero';
+                            campo.value = data[i]['title_campo'];
+                            campo.innerHTML = data[i]['title_campo'];
+                        } else if (campo.type == 'button') { //caso for button
+                            campo.classList.add('myButton');
+                            campo.value = data[i]['title_campo'];
+                            campo.onclick = function () { alert('clicou no botao para cadastrar...'); }
+                        } else {
+                            campo.placeholder = data[i]['title_campo'];
+                            if (campo.placeholder == 'Money') {//if true add class in input
+                                campo.classList.add('inpMoney');
+                                campo.setAttribute("onkeypress", "return onlyNumbers(event)");
+                                campo.setAttribute("size", "10");
+                            }
                         }
                     }
+                    $(div).draggable();
+                    content.appendChild(fragment);
                 }
-                $(div).draggable();
-                content.appendChild(fragment);
             }
-
-        }
-    });
+        });
+    }
+    
 }
 
 //footer
@@ -126,9 +132,6 @@ function onlyNumbers(e) {
     }
 }
 
-//function to name open windows.
-function idWindow(name_window){
-    var name = name_window.replace(" ", "_");
-    return name
-}
+
+
 
