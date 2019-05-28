@@ -84,3 +84,20 @@ input[type='radio']{
 	background-color:#5cbf2a;
 }
 
+
+/* botao close */
+.btn{
+    margin-left: 91%;
+    display: block;
+    width: 25px;
+    height: 25px;
+}
+.btn-close{
+    background: url('../img/btn-close2.png') no-repeat;
+}
+
+.windowDisplayOff{
+    display: none;
+}
+
+
