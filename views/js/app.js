@@ -13,10 +13,10 @@ $(document).ready(function () {
     });
 
 
-    $(":form").submit(function( event ) {
-        event.preventDefault();
-        console.log('POST FORM');
-      });
+    // $("form").on("submit", function( event ) {
+    //     event.preventDefault();
+    //     console.log('POST FORM');
+    // });
     
     
 });
@@ -67,6 +67,7 @@ function createWindow(nameWindow) {
                 h1.innerHTML = data[0]['nome_window'];
                 form = div.appendChild(document.createElement('form'));
                 form.classList.add('form');
+                form.addEventListener("submit", function(evento){event.preventDefault();teste();});
                 var nameForm = data[0].nome_window.replace(/ /g, "_").toLowerCase();
                 form.setAttribute('name', nameForm);
                 for (i = 0; i < data.length; i++) {
@@ -80,8 +81,7 @@ function createWindow(nameWindow) {
                     } else if (campo.type == 'button') { //caso for button
                         campo.classList.add('myButton');
                         campo.value = data[i]['title_campo'];
-                        // campo.onclick = function () { alert('clicou no botao para cadastrar...'); }
-                        
+                       // campo.onclick = function () { teste(); }
                     } else {
                         campo.placeholder = data[i]['title_campo'];
                         if (campo.placeholder == 'Money') {//if true add class in input
@@ -159,6 +159,11 @@ function verifyWindowOpens(nameWindow){
             }
         }
     }
+}
+
+
+function teste(){
+    console.log('cliclou no botao para enviar');
 }
 
 
