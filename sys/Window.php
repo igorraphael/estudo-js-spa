@@ -46,6 +46,26 @@ class Window{
     }
 
 
+//functions for register
+    public function newCadastro(){
+        //$_POST['param'] array contendo dados..
+        $nome = $_POST['param'][0];     // Nome 
+        $rg = $_POST['param'][1];       // RG 
+        $email = $_POST['param'][2];    // Email 
+        $dt_nasc = date('Y-m-d');  // Data Nasc 
+        $money = $_POST['param'][4];    // Money 
+        $sql = "INSERT INTO client(`nome`, `rg`, `email`, `dt_nasc`, `money`) VALUES('$nome', '$rg', '$email', '$dt_nasc', '$money')";
+        $exe_query = mysqli_query($this->conn, $sql);
+            if($exe_query){
+                $msg = "Cliente cadastrado.";
+            }else{
+                $msg = "Error: " . $sql . "<br>" . mysqli_error($this->conn);
+            }
+       
+        return $msg;
+    }
+
+
 // functions db
     public function connectDB(){
       	//DEV

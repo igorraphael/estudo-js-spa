@@ -12,12 +12,6 @@ $(document).ready(function () {
         createWindow();
     });
 
-
-    // $("form").on("submit", function( event ) {
-    //     event.preventDefault();
-    //     console.log('POST FORM');
-    // });
-    
     
 });
 //function create header
@@ -67,18 +61,19 @@ function createWindow(nameWindow) {
                 h1.innerHTML = data[0]['nome_window'];
                 form = div.appendChild(document.createElement('form'));
                 form.classList.add('form');
-                form.addEventListener("submit", function(evento){event.preventDefault();teste();});
+                form.addEventListener("submit", function(evento){event.preventDefault();teste();}); //add event default, function for form..
                 var nameForm = data[0].nome_window.replace(/ /g, "_").toLowerCase();
                 form.setAttribute('name', nameForm);
                 for (i = 0; i < data.length; i++) {
                     var tipoCampo = separatorType(data[i]['campo_type'], 'type');
                     campo = form.appendChild(document.createElement('input'));
                     campo.setAttribute('type', separatorType(data[i]['campo_type'], 'type'));
+                    campo.name = nameInput(data[i]['title_campo']);
                     if (campo.type == 'radio') {//para os radios
                         campo.name = 'genero';
-                        campo.value = data[i]['title_campo'];
+                        //campo.value = data[i]['title_campo'];
                         campo.innerHTML = data[i]['title_campo'];
-                    } else if (campo.type == 'button') { //caso for button
+                    } else if (campo.type == 'submit') { //caso for button
                         campo.classList.add('myButton');
                         campo.value = data[i]['title_campo'];
                        // campo.onclick = function () { teste(); }
@@ -128,11 +123,6 @@ function windowFocus(context) {
 
 function closeWindow(context, nameWindow) {
     context.classList.add('windowDisplayOff');
-    // for(var i = 0; i < windowsOpen.length; i++) {
-    //     if(windowsOpen[i][0] === nameWindow) {
-    //         windowsOpen[i][1] = 0; //seta no array 
-    //     }
-    //  }
     //context.style.display = 'none';
 }
 
@@ -162,8 +152,41 @@ function verifyWindowOpens(nameWindow){
 }
 
 
+function nameInput(title_campo){
+    var titleReturn = title_campo.split(" ");
+    return titleReturn[0].toLowerCase();
+}
+
 function teste(){
-    console.log('cliclou no botao para enviar');
+    var error = 0;
+    var array = [];
+    $("form input").each(function(){
+        var input = $(this);
+        if(input.val() == ''){
+            $(this).addClass('msg-error');   
+            //console.log(input.attr('name') + " VAZIO");
+            error++;
+        }else{
+            if( $(this).attr('type') != 'submit'){
+                array.push( $(this).val() );
+            }
+            
+        }
+    });
+    
+    if(error == 0){ //if error 0 send submit
+        $.ajax({
+            type: "POST",
+            url: "",
+            data: { mod: 'window', action: 'newCadastro', param: array },
+            error: function () { alert("Não foi possível cadastrar cliente."); },
+            success: function (data, textStatus, jqXHR) {
+                alert(data);
+            }
+        });
+    }else{
+        alert('Falta informar dados..');
+    }
 }
 
 

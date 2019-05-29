@@ -100,4 +100,6 @@ input[type='radio']{
     display: none;
 }
 
-
+.msg-error{
+    border: solid 1px red;
+}
