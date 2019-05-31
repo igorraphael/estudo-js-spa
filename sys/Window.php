@@ -46,14 +46,42 @@ class Window{
     }
 
 
-//functions for register
-    public function newCadastro(){
-        //$_POST['param'] array contendo dados..
-        $nome = $_POST['param'][0];     // Nome 
-        $rg = $_POST['param'][1];       // RG 
-        $email = $_POST['param'][2];    // Email 
-        $dt_nasc = date('Y-m-d');  // Data Nasc 
-        $money = $_POST['param'][4];    // Money 
+//function request form and insert 
+    public function newRequestForm(){
+        //$_POST['param']; array with data for insert
+        // if(! $_POST['param'] ){
+        //     return echo "Não é possivel completar a requisição.";
+        // }
+
+        if( $_POST['param'][0] == 'Cadastro_de_cliente' ){
+            $response = $this->newClient($_POST['param']);
+        }else{
+            $this->newProduct($_POST['param']);
+        }
+
+        // $nome = $_POST['param'][0];     // Nome 
+        // $rg = $_POST['param'][1];       // RG 
+        // $email = $_POST['param'][2];    // Email 
+        // $dt_nasc = date('Y-m-d');  // Data Nasc 
+        // $money = $_POST['param'][4];    // Money
+        // $sql = "INSERT INTO client(`nome`, `rg`, `email`, `dt_nasc`, `money`) VALUES('$nome', '$rg', '$email', '$dt_nasc', '$money')";
+        // $exe_query = mysqli_query($this->conn, $sql);
+        //     if($exe_query){
+        //         $msg = "Cliente cadastrado.";
+        //     }else{
+        //         $msg = "Error: " . $sql . "<br>" . mysqli_error($this->conn);
+        //     }
+       
+        return $response;
+    }
+
+    public function newClient($cliente){
+        $nome = $cliente[1];     // Nome 
+        $rg = $cliente[2];       // RG 
+        $email = $cliente[3];    // Email 
+        $dt_nasc = date('Y-m-d');         // Data Nasc 
+        $money = $cliente[4];    // Money
+
         $sql = "INSERT INTO client(`nome`, `rg`, `email`, `dt_nasc`, `money`) VALUES('$nome', '$rg', '$email', '$dt_nasc', '$money')";
         $exe_query = mysqli_query($this->conn, $sql);
             if($exe_query){
@@ -64,7 +92,10 @@ class Window{
        
         return $msg;
     }
-
+    
+    public function newProduct($product){
+        return $product;
+    }
 
 // functions db
     public function connectDB(){
