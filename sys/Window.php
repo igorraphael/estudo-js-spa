@@ -19,11 +19,11 @@ class Window{
     }
 
     public function getNameWindow(){
-        $sql = "SELECT * FROM window";
+        $sql = "SELECT * FROM janela";
         $exe_query = mysqli_query($this->conn, $sql);
         if( mysqli_num_rows($exe_query) > 0 ){
             while($row = mysqli_fetch_object($exe_query) ){
-                $result[] = $row->nome_window;
+                $result[] = $row->descricao;
             }
         }
         $this->close;
@@ -32,7 +32,7 @@ class Window{
 
     public function getWindows(){
         $nameWindow = $_POST['param'];
-        $sql = "SELECT W.nome_window, I.campo_type, I.title_campo FROM window AS W INNER JOIN itens_window AS I On I.id_window = W.id WHERE W.nome_window = '$nameWindow' ";
+        $sql = "SELECT J.descricao AS nJanela, I.descricao, I.field_element, I.field_type, I.id FROM janela AS J INNER JOIN itens_janela AS I ON I.id_janela = J.id WHERE J.descricao = '$nameWindow' ";
         $exe_query = mysqli_query($this->conn, $sql);
         if( mysqli_num_rows($exe_query) > 0 ){
             while($row = mysqli_fetch_object($exe_query) ){
@@ -47,23 +47,19 @@ class Window{
 
 
 //function request form and insert 
-    public function newRequestForm(){
-        //$_POST['param']; array with data for insert
-        // if(! $_POST['param'] ){
-        //     return echo "Não é possivel completar a requisição.";
+    public function insertNewRow(){
+        //return $_POST['param'];
+        $idJanela = $this->getIdJanela($_POST['param'][0]);
+        if(!$idJanela):
+            return "error";
+            exit();
+        endif;
+        $aa = $this->extractId($_POST['param'][1]);// PAREI AQUI
+        // for ($i=1; $i < count($_POST['param']); $i++) { 
+        //     # code...
         // }
-
-        if( $_POST['param'][0] == 'Cadastro_de_cliente' ){
-            $response = $this->newClient($_POST['param']);
-        }else{
-            $this->newProduct($_POST['param']);
-        }
-
-        // $nome = $_POST['param'][0];     // Nome 
-        // $rg = $_POST['param'][1];       // RG 
-        // $email = $_POST['param'][2];    // Email 
-        // $dt_nasc = date('Y-m-d');  // Data Nasc 
-        // $money = $_POST['param'][4];    // Money
+        //$sql = "INSERT INTO data_varchar VALUES ('$idJanela', '$')" 
+        
         // $sql = "INSERT INTO client(`nome`, `rg`, `email`, `dt_nasc`, `money`) VALUES('$nome', '$rg', '$email', '$dt_nasc', '$money')";
         // $exe_query = mysqli_query($this->conn, $sql);
         //     if($exe_query){
@@ -72,29 +68,30 @@ class Window{
         //         $msg = "Error: " . $sql . "<br>" . mysqli_error($this->conn);
         //     }
        
-        return $response;
+     return $aa;
     }
 
-    public function newClient($cliente){
-        $nome = $cliente[1];     // Nome 
-        $rg = $cliente[2];       // RG 
-        $email = $cliente[3];    // Email 
-        $dt_nasc = date('Y-m-d');         // Data Nasc 
-        $money = $cliente[4];    // Money
-
-        $sql = "INSERT INTO client(`nome`, `rg`, `email`, `dt_nasc`, `money`) VALUES('$nome', '$rg', '$email', '$dt_nasc', '$money')";
-        $exe_query = mysqli_query($this->conn, $sql);
-            if($exe_query){
-                $msg = "Cliente cadastrado.";
-            }else{
-                $msg = "Error: " . $sql . "<br>" . mysqli_error($this->conn);
-            }
-       
-        return $msg;
+    public function extractId($item){
+        $n = explode("[", $item);// $n[0] = dado informado pelo usuario.
+        $n1 = explode("]", $n[1]); //$n1[0] = ID do campo na tabela.
+        $newArray = array( $n[0], $n1[0]);
+        return $newArray;
     }
     
-    public function newProduct($product){
-        return $product;
+    //get id 
+    public function getIdJanela($name){
+        //var_dump($name);
+        $sql = "SELECT * FROM janela WHERE descricao = '$name'";
+        $exe_query = mysqli_query($this->conn, $sql);
+        // if( mysqli_num_rows($exe_query) > 0 ){
+        //     while($row = mysqli_fetch_object($exe_query) ){
+        //         $result[] = $row->id;
+        //     }
+        // }
+        $row = mysqli_fetch_assoc($exe_query);
+        $this->close;
+        return $row;
+
     }
 
 // functions db

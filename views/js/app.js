@@ -20,6 +20,7 @@ function createHeader() {
         type: 'POST', url: '', data: { mod: 'window', action: 'getNameWindow' },
         error: function (xhr, textStatus, error) { alert("Não foi possível atender sua requisição."); },
         success: function (data, textStatus, jqXHR) {
+            // console.log(data);
             //var headerNav = ['Cadastro', 'Relatorio', 'Finanças'];
             var header = document.createElement('nav');
             header.classList.add('header');
@@ -47,7 +48,7 @@ function createWindow(nameWindow) {
                 alert(data);
             }else{
                 //fragmento-div
-                var nWindowFull = data[0].nome_window.replace(/ /g, "_");
+                var nWindowFull = data[0].nJanela.replace(/ /g, "_");
                 windowsOpen.push( [nWindowFull,1] );
                 var fragment, div, i, campo, h1, form, btnClose;
                 fragment = document.createDocumentFragment();
@@ -58,32 +59,46 @@ function createWindow(nameWindow) {
                 div.setAttribute("id", nWindowFull );
                 div.classList.add('window');
                 h1 = div.appendChild(document.createElement('h1'));
-                h1.innerHTML = data[0]['nome_window'];
+                h1.innerHTML = data[0]['descricao'];
                 form = div.appendChild(document.createElement('form'));
                 form.classList.add('form');
-                form.addEventListener("submit", function(evento){event.preventDefault();teste();}); //add event default, function for form..
-                var nameForm = data[0].nome_window.replace(/ /g, "_").toLowerCase();
+                form.setAttribute("id", nWindowFull);
+                form.addEventListener("submit", function(evento){event.preventDefault();sendForm(data[0].nJanela);}); //add event default for submit form
+                var nameForm = data[0].nJanela; //.replace(/ /g, "_").toLowerCase();
                 form.setAttribute('name', nameForm);
+                
+                
                 for (i = 0; i < data.length; i++) {
-                    var tipoCampo = separatorType(data[i]['campo_type'], 'type');
-                    campo = form.appendChild(document.createElement('input'));
-                    campo.setAttribute('type', separatorType(data[i]['campo_type'], 'type'));
-                    campo.name = nameInput(data[i]['title_campo']);
-                    if (campo.type == 'radio') {//para os radios
-                        campo.name = 'genero';
-                        //campo.value = data[i]['title_campo'];
-                        campo.innerHTML = data[i]['title_campo'];
-                    } else if (campo.type == 'submit') { //caso for button
+                    //var tipoCampo = separatorType(data[i]['campo_type'], 'type');
+
+                    campo = form.appendChild(document.createElement(data[i]['field_element']));
+                    campo.setAttribute('type', data[i]['field_type'] );
+                    campo.name = nameInput(data[i]['descricao']);
+                    campo.setAttribute('data-iten', data[i]['id']);
+                    // if (campo.type == 'radio') {//para os radios
+                    //     campo.name = 'genero';
+                    //     campo.innerHTML = data[i]['title_campo'];
+                    // } else if (campo.type == 'submit') { //caso for button
+                    //     campo.classList.add('myButton');
+                    //     campo.value = data[i]['descricao'];
+                    // } else {
+                        campo.placeholder = data[i]['descricao'];
+                    //     if(data[i]['field_type'] == 'number'){
+                    //         campo.classList.add('inpMoney');
+                    //         campo.setAttribute("onkeypress", "return onlyNumbers(event)");
+                    //         campo.setAttribute("size", "10"); 
+                    //         campo.setAttribute("min", "0"); 
+                    //         campo.setAttribute("max", "100"); 
+                    //     }
+                    //     if (campo.placeholder == 'Money') {//if true add class in input
+                    //         campo.classList.add('inpMoney');
+                    //         campo.setAttribute("onkeypress", "return onlyNumbers(event)");
+                    //         campo.setAttribute("size", "10");
+                    //     }
+                    // }
+                    if(data[i]['field_element'] == 'button'){
                         campo.classList.add('myButton');
-                        campo.value = data[i]['title_campo'];
-                       // campo.onclick = function () { teste(); }
-                    } else {
-                        campo.placeholder = data[i]['title_campo'];
-                        if (campo.placeholder == 'Money') {//if true add class in input
-                            campo.classList.add('inpMoney');
-                            campo.setAttribute("onkeypress", "return onlyNumbers(event)");
-                            campo.setAttribute("size", "10");
-                        }
+                        campo.innerHTML = data[i]['descricao'];
                     }
                 }
                 $(div).draggable();
@@ -122,8 +137,8 @@ function windowFocus(context) {
 }
 
 function closeWindow(context, nameWindow) {
+    context.parentNode.removeChild(context);//remove div DOM.
     context.classList.add('windowDisplayOff');
-    //context.style.display = 'none';
 }
 
 //only numbers
@@ -157,30 +172,34 @@ function nameInput(title_campo){
     return titleReturn[0].toLowerCase();
 }
 
-function teste(){
+function sendForm(nForm){
     var error = 0;
     var array = [];
+    array.push(nForm);
     $("form input").each(function(){
         var input = $(this);
         if(input.val() == ''){
-            $(this).addClass('msg-error');   
+            input.addClass('msg-error');   
             //console.log(input.attr('name') + " VAZIO");
             error++;
         }else{
-            if( $(this).attr('type') != 'submit'){
-                array.push( $(this).val() );
+            if(input.attr('type') != 'submit'){
+                var data = input.val()+'['+input.data("iten")+']';
+                array.push( data );
             }
             
         }
     });
-    
     if(error == 0){ //if error 0 send submit
         $.ajax({
             type: "POST",
             url: "",
-            data: { mod: 'window', action: 'newCadastro', param: array },
+            data: { mod: 'window', action: 'insertNewRow', param: array },
             error: function () { alert("Não foi possível cadastrar cliente."); },
             success: function (data, textStatus, jqXHR) {
+                console.log(data);
+                $('.msg-error').removeClass('msg-error');
+                $('input').val('');
                 alert(data);
             }
         });
