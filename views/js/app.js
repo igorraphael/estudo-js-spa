@@ -63,36 +63,16 @@ function createWindow(nameWindow) {
                 form = div.appendChild(document.createElement('form'));
                 form.classList.add('form');
                 form.setAttribute("id", nWindowFull);
-                form.addEventListener("submit", function(evento){event.preventDefault();sendForm(data[0].nJanela);}); //add event default for submit form
+                form.addEventListener("submit", function(evento){event.preventDefault();sendForm(data[0].nJanela, data[0].id_janela);}); //add event default for submit form
                 var nameForm = data[0].nJanela; //.replace(/ /g, "_").toLowerCase();
                 form.setAttribute('name', nameForm);
+                form.setAttribute('data-id-window', data[0].id_janela);
                 for (i = 0; i < data.length; i++) {
-                    //var tipoCampo = separatorType(data[i]['campo_type'], 'type');
                     campo = form.appendChild(document.createElement(data[i]['field_element']));
                     campo.setAttribute('type', data[i]['field_type'] );
                     campo.name = nameInput(data[i]['descricao']);
                     campo.setAttribute('data-iten', data[i]['id']);
-                    // if (campo.type == 'radio') {//para os radios
-                    //     campo.name = 'genero';
-                    //     campo.innerHTML = data[i]['title_campo'];
-                    // } else if (campo.type == 'submit') { //caso for button
-                    //     campo.classList.add('myButton');
-                    //     campo.value = data[i]['descricao'];
-                    // } else {
-                        campo.placeholder = data[i]['descricao'];
-                    //     if(data[i]['field_type'] == 'number'){
-                    //         campo.classList.add('inpMoney');
-                    //         campo.setAttribute("onkeypress", "return onlyNumbers(event)");
-                    //         campo.setAttribute("size", "10"); 
-                    //         campo.setAttribute("min", "0"); 
-                    //         campo.setAttribute("max", "100"); 
-                    //     }
-                    //     if (campo.placeholder == 'Money') {//if true add class in input
-                    //         campo.classList.add('inpMoney');
-                    //         campo.setAttribute("onkeypress", "return onlyNumbers(event)");
-                    //         campo.setAttribute("size", "10");
-                    //     }
-                    // }
+                    campo.placeholder = data[i]['descricao'];
                     if(data[i]['field_element'] == 'button'){
                         campo.classList.add('myButton');
                         campo.innerHTML = data[i]['descricao'];
@@ -114,15 +94,6 @@ function createBarWindow() {
         var block = divBar.append(document.createElement('button'));
         block.innerHTML = footer[0]; // PAREI AQUIIIIIIII
         //block.classList.add('block-window-bottom');
-    }
-}
-
-function separatorType(campo_type, retorno) {
-    var type_field = campo_type.split("-");
-    if (retorno == 'type') {
-        return type_field[1];
-    } else {
-        return type_field[0];
     }
 }
 
@@ -148,31 +119,16 @@ function onlyNumbers(e) {
     }
 }
 
-function verifyWindowOpens(nameWindow){
-    var winOpens = $('.window');
-    if(winOpens.length > 0){
-        for (var c = 0; c < winOpens.length; c++) {
-            if(winOpens[c].classList.contains("windowDisplayOff") == true){
-                winOpens[c].classList.remove("windowDisplayOff"); 
-            }else if(winOpens[c].id === nameWindow){
-                //winOpens[c].classList.remove("windowDisplayOn"); 
-                //alert('ja foi criado.');
-                return false;
-            }
-        }
-    }
-}
-
 
 function nameInput(title_campo){
     var titleReturn = title_campo.split(" ");
     return titleReturn[0].toLowerCase();
 }
 
-function sendForm(nForm){
+function sendForm(nameForm){
     var error = 0;
     var array = [];
-    array.push(nForm);
+    array.push(nameForm);
     $("form input").each(function(){
         var input = $(this);
         if(input.val() == ''){
