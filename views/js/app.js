@@ -59,18 +59,15 @@ function createWindow(nameWindow) {
                 div.setAttribute("id", nWindowFull );
                 div.classList.add('window');
                 h1 = div.appendChild(document.createElement('h1'));
-                h1.innerHTML = data[0]['descricao'];
+                h1.innerHTML = data[0]['nJanela'];
                 form = div.appendChild(document.createElement('form'));
                 form.classList.add('form');
                 form.setAttribute("id", nWindowFull);
                 form.addEventListener("submit", function(evento){event.preventDefault();sendForm(data[0].nJanela);}); //add event default for submit form
                 var nameForm = data[0].nJanela; //.replace(/ /g, "_").toLowerCase();
                 form.setAttribute('name', nameForm);
-                
-                
                 for (i = 0; i < data.length; i++) {
                     //var tipoCampo = separatorType(data[i]['campo_type'], 'type');
-
                     campo = form.appendChild(document.createElement(data[i]['field_element']));
                     campo.setAttribute('type', data[i]['field_type'] );
                     campo.name = nameInput(data[i]['descricao']);
@@ -180,7 +177,6 @@ function sendForm(nForm){
         var input = $(this);
         if(input.val() == ''){
             input.addClass('msg-error');   
-            //console.log(input.attr('name') + " VAZIO");
             error++;
         }else{
             if(input.attr('type') != 'submit'){

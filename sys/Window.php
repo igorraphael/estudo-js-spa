@@ -32,7 +32,7 @@ class Window{
 
     public function getWindows(){
         $nameWindow = $_POST['param'];
-        $sql = "SELECT J.descricao AS nJanela, I.descricao, I.field_element, I.field_type, I.id FROM janela AS J INNER JOIN itens_janela AS I ON I.id_janela = J.id WHERE J.descricao = '$nameWindow' ";
+        $sql = "SELECT J.descricao AS nJanela, I.descricao, I.field_element, I.field_type, I.id, I.position_form FROM janela AS J INNER JOIN itens_janela AS I ON I.id_janela = J.id WHERE J.descricao = '$nameWindow' ORDER BY I.position_form ASC";
         $exe_query = mysqli_query($this->conn, $sql);
         if( mysqli_num_rows($exe_query) > 0 ){
             while($row = mysqli_fetch_object($exe_query) ){
@@ -46,7 +46,8 @@ class Window{
     }
 
 
-//function request form and insert 
+//function request form and insert
+//$_POST['param'][0] Nome da janela.
     public function insertNewRow(){
         //return $_POST['param'];
         $idJanela = $this->getIdJanela($_POST['param'][0]);
@@ -54,10 +55,17 @@ class Window{
             return "error";
             exit();
         endif;
+        array_splice($_POST['param'], 0, 1); //Remove o nome da janela.
         $aa = $this->extractId($_POST['param'][1]);// PAREI AQUI
-        // for ($i=1; $i < count($_POST['param']); $i++) { 
-        //     # code...
-        // }
+        $teste = [];
+        foreach ($_POST['param'] as $key => $value) {
+            if(is_string($value)){
+                $teste[$key] = "string: ".$value;
+            }else{
+                $teste[$key] = "nao e string: ".$value;
+            }
+           
+        }
         //$sql = "INSERT INTO data_varchar VALUES ('$idJanela', '$')" 
         
         // $sql = "INSERT INTO client(`nome`, `rg`, `email`, `dt_nasc`, `money`) VALUES('$nome', '$rg', '$email', '$dt_nasc', '$money')";
@@ -68,7 +76,7 @@ class Window{
         //         $msg = "Error: " . $sql . "<br>" . mysqli_error($this->conn);
         //     }
        
-     return $aa;
+     return $teste;
     }
 
     public function extractId($item){
