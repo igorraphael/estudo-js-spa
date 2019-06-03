@@ -149,7 +149,7 @@ function sendForm(nameForm){
             data: { mod: 'window', action: 'insertNewRow', param: array },
             error: function () { alert("Não foi possível cadastrar cliente."); },
             success: function (data, textStatus, jqXHR) {
-                console.log(data);
+                //console.log(data);
                 $('.msg-error').removeClass('msg-error');
                 $('input').val('');
                 alert(data);
