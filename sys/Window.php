@@ -32,7 +32,7 @@ class Window{
 
     public function getWindows(){
         $nameWindow = $_POST['param'];
-        $sql = "SELECT J.descricao AS nJanela, I.descricao, I.field_element, I.field_type, I.id, I.position_form FROM janela AS J INNER JOIN itens_janela AS I ON I.id_janela = J.id WHERE J.descricao = '$nameWindow' ORDER BY I.position_form ASC";
+        $sql = "SELECT J.id AS id_janela,J.descricao AS nJanela, I.descricao, I.field_element, I.field_type, I.id, I.position_form FROM janela AS J INNER JOIN itens_janela AS I ON I.id_janela = J.id WHERE J.descricao = '$nameWindow' ORDER BY I.position_form ASC";
         $exe_query = mysqli_query($this->conn, $sql);
         if( mysqli_num_rows($exe_query) > 0 ){
             while($row = mysqli_fetch_object($exe_query) ){
@@ -55,28 +55,26 @@ class Window{
             return "error";
             exit();
         endif;
+        $contador = 0;
         array_splice($_POST['param'], 0, 1); //Remove o nome da janela.
-        $aa = $this->extractId($_POST['param'][1]);// PAREI AQUI
-        $teste = [];
-        foreach ($_POST['param'] as $key => $value) {
-            if(is_string($value)){
-                $teste[$key] = "string: ".$value;
-            }else{
-                $teste[$key] = "nao e string: ".$value;
+        for ($i=0; $i < count($_POST['param']); $i++) { 
+            $data_id = $this->extractId($_POST['param'][$i]);
+            $id = $data_id[1];
+            $data = $data_id[0];
+            $sql = "INSERT INTO data_varchar (id_janela, id_iten_janela, data_value) VALUES ('".$idJanela['id']."', '$id', '$data')";
+            $exe_query = mysqli_query($this->conn, $sql);
+            if($exe_query){
+                $contador += 1;
             }
-           
+            //
         }
-        //$sql = "INSERT INTO data_varchar VALUES ('$idJanela', '$')" 
-        
-        // $sql = "INSERT INTO client(`nome`, `rg`, `email`, `dt_nasc`, `money`) VALUES('$nome', '$rg', '$email', '$dt_nasc', '$money')";
-        // $exe_query = mysqli_query($this->conn, $sql);
-        //     if($exe_query){
-        //         $msg = "Cliente cadastrado.";
-        //     }else{
-        //         $msg = "Error: " . $sql . "<br>" . mysqli_error($this->conn);
-        //     }
-       
-     return $teste;
+
+        if($contador > 1 ){
+            $msg = "Foi inserido {$contador} dados!";
+        }else{
+            $msg = "Foi inserido {$contador} dados!";
+        }
+     return $msg;
     }
 
     public function extractId($item){
