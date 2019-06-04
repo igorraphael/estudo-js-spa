@@ -102,8 +102,8 @@ class Window{
 
 //get data for table
     public function getAllData(){
-        //nome da janela para pegar infos -> $_POST['param']
-        $name = $_POST['param'];
+        //nome da janela para pegar infos -> $_POST['window']
+        $name = $_POST['window'];
         $sql = "SELECT * from janela WHERE descricao = '$name'";
         $first_query = mysqli_query($this->conn, $sql);
         $id_for_data = mysqli_fetch_assoc($first_query);
@@ -112,7 +112,15 @@ class Window{
         endif;
         $id = $id_for_data['id'];
         //select data com id janela.
-        $sql = "SELECT * FROM data_varchar WHERE id_janela = $id";
+        // $sql = "SELECT * FROM data_varchar WHERE id_janela = $id";
+        // $exe_query = mysqli_query($this->conn, $sql);
+        // if( mysqli_num_rows($exe_query) > 0 ){
+        //     while($row = mysqli_fetch_object($exe_query) ){
+        //         $result[] = $row;
+        //     }
+        // }
+        //select com inner join
+        $sql = "SELECT I.descricao AS label, D.id, D.data_value FROM itens_janela AS I INNER JOIN data_varchar AS D ON I.id = D.id_iten_janela WHERE D.id_janela = $id ORDER BY D.id";
         $exe_query = mysqli_query($this->conn, $sql);
         if( mysqli_num_rows($exe_query) > 0 ){
             while($row = mysqli_fetch_object($exe_query) ){

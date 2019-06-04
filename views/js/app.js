@@ -3,7 +3,7 @@ var content;
 
 $(document).ready(function () {
     content = document.body.appendChild(document.createElement('div'));
-    content.classList.add('container');
+    content.classList.add('container-fluid');
     createHeader();
 
     //click nav menu 
@@ -39,7 +39,7 @@ function createHeader() {
 //create window
 function createWindow(nameWindow) {
     if(nameWindow == 'Tabela'){
-        createTableList(nameWindow);
+        createTableList2(nameWindow);
     }else{
         $.ajax({
             type: "POST",
@@ -91,6 +91,103 @@ function createWindow(nameWindow) {
 //end func    
 }
 
+function createTableList2(nameWindow){
+    var table = $("table");
+    if( table.length != 0 ){
+        alert('Tabela abaixo..');
+    }else{
+        nameWindow = 'Cliente';
+    $.ajax({
+        type: "POST",
+        url: "",
+        data: { mod: 'window', action: 'getAllData', window: nameWindow },
+        error: function () { alert("Não foi possível atender sua requisição."); },
+        success: function (data, textStatus, jqXHR) {
+            var arrayHeaderTable = headerTable(data);
+            var div, table, thead, tr, th, td, tbody;
+            div = content.appendChild(document.createElement('div'));
+            div.classList.add('div-table');
+            //table
+            table = div.appendChild(document.createElement('TABLE'));
+            table.classList.add('table');
+            table.setAttribute("id", 'table-'+nameWindow+'');
+            //thead
+            thead = table.appendChild(document.createElement('thead'));
+            thead.classList.add('thead-dark');
+            tr = thead.appendChild(document.createElement('tr'));
+            tr.classList.add('tr-table');
+            arrayHeaderTable.push('Editar');
+            for(var i = 0; i < arrayHeaderTable.length; i++){
+                th =  tr.appendChild(document.createElement('th'));
+                th.innerHTML = arrayHeaderTable[i];
+            }
+            //tbody
+            tbody = table.appendChild(document.createElement('tbody'));
+            
+            
+            // for (var j = 0; j < data.length; j++) {
+            //     if(j < 5){
+            //         td = tr.appendChild(document.createElement('td'));
+            //         td.innerHTML = data[j]['data_value'];
+            //     }else{
+            //         if(j === 5 ){
+            //             tr = tbody.appendChild(document.createElement('tr')); 
+            //         }
+            //         td = tr.appendChild(document.createElement('td'));
+            //         td.innerHTML = data[j]['data_value'];
+            //     }
+            // }
+            
+            // console.log(data);
+            for(var j = 0; j < data.length / 5; j++){
+                var row = createRowTable(data);
+                tr = tbody.appendChild(document.createElement('tr'));
+                //console.log(row);
+                tr.setAttribute("data-id-value", row[j].id);
+                
+                for(var t = 0; t < row.length; t++){
+                    td = tr.appendChild(document.createElement('td'));
+                    td.innerHTML = row[t].data_value;
+                }
+                
+            }   
+
+         
+        }
+    });
+    }
+     
+}
+//function criar row na tabela
+function createRowTable(data){
+    var newArr = [];
+    for (var i = 0; i < 5; i++) {
+        newArr[i] = data[i];
+        data.splice(i,1);
+    }
+    return newArr;
+}
+//function para criar array do body
+function bodyTable(data){
+    //
+    var cont = data.length / 5;
+    var arr = new Array(cont);
+    var newData = data.map( function( elem ) {
+        return elem['data_value'];
+    } ); 
+    for (var i = 0; i < newData.length / 2; i++) {
+        arr = newData.splice(i, 1);         
+    }
+    return arr;
+}
+//function para criar o array do header
+function headerTable(data){
+    var newArr = [];
+    for(var i = 0; i < 5; i++){
+        newArr[i] = data[i].label;
+    }
+    return newArr;
+}
 function createTableList(){
     var div, table, row, thead, tr, th, td, tbody;
     var headTable = ['Nome', 'Login', 'Data', 'E-mail'];

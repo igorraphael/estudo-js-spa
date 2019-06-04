@@ -43,7 +43,7 @@ nav a:hover{
     background-color: #EEEAEA;
     padding: 5px;
     width: 300px;
-    height: 300px;
+    height: auto;
     border: solid 0.5px #696969;
 }
 
@@ -58,9 +58,6 @@ input{
     border-radius: 3px;
 }
 
-button{
-    margin: 10px;
-}
 .myButton {
     display: flex;
     width: 100px;
@@ -74,6 +71,8 @@ button{
     text-decoration:none;
     justify-content: center;
     margin-left: 30%;
+    margin-top:15px;
+    margin-bottom: 10px;
 }
 .myButton:hover {
 	background-color:#5cbf2a;
@@ -97,9 +96,4 @@ button{
 
 .msg-error{
     border: solid 1px red;
-}
-
-
-table, td{
-    border:solid 1px black;
 }
