@@ -1,5 +1,5 @@
 'use strict';
-var content, windowsOpen = [];
+var content;
 
 $(document).ready(function () {
     content = document.body.appendChild(document.createElement('div'));
@@ -38,65 +38,107 @@ function createHeader() {
 
 //create window
 function createWindow(nameWindow) {
-    $.ajax({
-        type: "POST",
-        url: "",
-        data: { mod: 'window', action: 'getWindows', param: nameWindow },
-        error: function () { alert("Não foi possível atender sua requisição."); },
-        success: function (data, textStatus, jqXHR) {
-            if(data.indexOf('Nenhum') != -1) { //Caso não exista campos para criar janela..
-                alert(data);
-            }else{
-                //fragmento-div
-                var nWindowFull = data[0].nJanela.replace(/ /g, "_");
-                windowsOpen.push( [nWindowFull,1] );
-                var fragment, div, i, campo, h1, form, btnClose;
-                fragment = document.createDocumentFragment();
-                div = fragment.appendChild(document.createElement('div'));
-                btnClose = div.appendChild( document.createElement('span') );
-                btnClose.onclick = function(){ closeWindow(this.parentNode, nWindowFull);}
-                btnClose.classList.add('btn', 'btn-close');
-                div.setAttribute("id", nWindowFull );
-                div.classList.add('window');
-                h1 = div.appendChild(document.createElement('h1'));
-                h1.innerHTML = data[0]['nJanela'];
-                form = div.appendChild(document.createElement('form'));
-                form.classList.add('form');
-                form.setAttribute("id", nWindowFull);
-                form.addEventListener("submit", function(evento){event.preventDefault();sendForm(data[0].nJanela, data[0].id_janela);}); //add event default for submit form
-                var nameForm = data[0].nJanela; //.replace(/ /g, "_").toLowerCase();
-                form.setAttribute('name', nameForm);
-                form.setAttribute('data-id-window', data[0].id_janela);
-                for (i = 0; i < data.length; i++) {
-                    campo = form.appendChild(document.createElement(data[i]['field_element']));
-                    campo.setAttribute('type', data[i]['field_type'] );
-                    campo.name = nameInput(data[i]['descricao']);
-                    campo.setAttribute('data-iten', data[i]['id']);
-                    campo.placeholder = data[i]['descricao'];
-                    if(data[i]['field_element'] == 'button'){
-                        campo.classList.add('myButton');
-                        campo.innerHTML = data[i]['descricao'];
+    if(nameWindow == 'Tabela'){
+        createTableList(nameWindow);
+    }else{
+        $.ajax({
+            type: "POST",
+            url: "",
+            data: { mod: 'window', action: 'getWindows', param: nameWindow },
+            error: function () { alert("Não foi possível atender sua requisição."); },
+            success: function (data, textStatus, jqXHR) {
+                if(data.indexOf('Nenhum') != -1) { //Caso não exista campos para criar janela..
+                    alert(data);
+                }else{
+                    //fragmento-div
+                    var nWindowFull = data[0].nJanela.replace(/ /g, "_");
+                    var fragment, div, i, campo, h1, form, btnClose;
+                    fragment = document.createDocumentFragment();
+                    div = fragment.appendChild(document.createElement('div'));
+                    btnClose = div.appendChild( document.createElement('span') );
+                    btnClose.onclick = function(){ closeWindow(this.parentNode, nWindowFull);}
+                    btnClose.classList.add('btn', 'btn-close');
+                    div.setAttribute("id", nWindowFull );
+                    div.classList.add('window');
+                    h1 = div.appendChild(document.createElement('h1'));
+                    h1.innerHTML = data[0]['nJanela'];
+                    form = div.appendChild(document.createElement('form'));
+                    form.classList.add('form');
+                    form.setAttribute("id", nWindowFull);
+                    form.addEventListener("submit", function(evento){event.preventDefault();sendForm(data[0].nJanela, data[0].id_janela);}); //add event default for submit form
+                    var nameForm = data[0].nJanela; //.replace(/ /g, "_").toLowerCase();
+                    form.setAttribute('name', nameForm);
+                    form.setAttribute('data-id-window', data[0].id_janela);
+                    for (i = 0; i < data.length; i++) {
+                        campo = form.appendChild(document.createElement(data[i]['field_element']));
+                        campo.setAttribute('type', data[i]['field_type'] );
+                        campo.name = nameInput(data[i]['descricao']);
+                        campo.setAttribute('data-iten', data[i]['id']);
+                        campo.placeholder = data[i]['descricao'];
+                        if(data[i]['field_element'] == 'button'){
+                            campo.classList.add('myButton');
+                            campo.innerHTML = data[i]['descricao'];
+                        }
                     }
+                    $(div).draggable();
+                    content.appendChild(fragment);
                 }
-                $(div).draggable();
-                content.appendChild(fragment);
             }
-        }
-    });
+        });
+    }
+
+
 //end func    
 }
 
-
-//footer
-function createBarWindow() {
-    if (footer.length > 0) {
-        var divBar = $('.bar-window');
-        var block = divBar.append(document.createElement('button'));
-        block.innerHTML = footer[0]; // PAREI AQUIIIIIIII
-        //block.classList.add('block-window-bottom');
+function createTableList(){
+    var div, table, row, thead, tr, th, td, tbody;
+    var headTable = ['Nome', 'Login', 'Data', 'E-mail'];
+    div = content.appendChild(document.createElement('div'));
+    div.classList.add('wrap-table100');
+    //table
+    table = div.appendChild(document.createElement('TABLE'));
+    table.classList.add('table');
+    table.setAttribute("id", "myTable");
+    //thead
+    thead = table.appendChild(document.createElement('thead'));
+    tr = thead.appendChild(document.createElement('tr'));
+    tr.classList.add('table100-head');
+    for(var i = 0; i < headTable.length; i++){
+       th =  tr.appendChild(document.createElement('th'));
+       th.innerHTML = headTable[i];
     }
-}
+    //tbody
+    tbody = table.appendChild(document.createElement('tbody'));
+    tr = tbody.appendChild(document.createElement('tr'));
+    
+    
+    $.ajax({
+        type: "POST",
+        url: "",
+        data: { mod: 'window', action: 'getAllData', param: 'Cliente' },
+        error: function () { alert("Não foi possível atender sua requisição."); },
+        success: function (data, textStatus, jqXHR) {
+            console.log(data);
+        }
+    });
+    // for(var j = 0; j < 4; j++){
+        
+    //     td = tr.appendChild(document.createElement('td'));
+    //     td.innerHTML = 'xxxxxxx'+j;
+    // }
+    
 
+    // for (var i = 0; i < 10; i++) {
+    //     row = table.insertRow(0);
+    //     var cel = row.insertCell(0);
+    //     var cel1 = row.insertCell(1);
+    //     cel.innerHTML = 'TESTE '+i;
+    //     cel1.innerHTML = 't'+i;
+    // }
+    
+
+}
 function windowFocus(context) {
     $('.janela').css('zIndex', '0');
     $('.janela').css('opacity', '0.4');
