@@ -98,9 +98,32 @@ class Window{
         $this->close;
         return $row;
 
-    }
+    }          
 
-// functions db
+//get data for table
+    public function getAllData(){
+        //nome da janela para pegar infos -> $_POST['param']
+        $name = $_POST['param'];
+        $sql = "SELECT * from janela WHERE descricao = '$name'";
+        $first_query = mysqli_query($this->conn, $sql);
+        $id_for_data = mysqli_fetch_assoc($first_query);
+        if(!$id_for_data):
+            return "Error!";
+        endif;
+        $id = $id_for_data['id'];
+        //select data com id janela.
+        $sql = "SELECT * FROM data_varchar WHERE id_janela = $id";
+        $exe_query = mysqli_query($this->conn, $sql);
+        if( mysqli_num_rows($exe_query) > 0 ){
+            while($row = mysqli_fetch_object($exe_query) ){
+                $result[] = $row;
+            }
+        }
+        $this->close;
+        return $result;
+    } 
+
+//functions db
     public function connectDB(){
       	//DEV
 		$dbname = 'project';
