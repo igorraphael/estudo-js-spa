@@ -103,7 +103,9 @@ function createTableList2(nameWindow){
         data: { mod: 'window', action: 'getAllData', window: nameWindow },
         error: function () { alert("Não foi possível atender sua requisição."); },
         success: function (data, textStatus, jqXHR) {
+            console.table(data);
             var arrayHeaderTable = headerTable(data);
+            //console.table(arrayHeaderTable);
             var div, table, thead, tr, th, td, tbody;
             div = content.appendChild(document.createElement('div'));
             div.classList.add('div-table');
@@ -116,40 +118,23 @@ function createTableList2(nameWindow){
             thead.classList.add('thead-dark');
             tr = thead.appendChild(document.createElement('tr'));
             tr.classList.add('tr-table');
-            arrayHeaderTable.push('Editar');
+            //arrayHeaderTable.push('Editar');
             for(var i = 0; i < arrayHeaderTable.length; i++){
                 th =  tr.appendChild(document.createElement('th'));
-                th.innerHTML = arrayHeaderTable[i];
+                th.innerHTML = arrayHeaderTable[i].window;
             }
             //tbody
             tbody = table.appendChild(document.createElement('tbody'));
-            
-            
-            // for (var j = 0; j < data.length; j++) {
-            //     if(j < 5){
-            //         td = tr.appendChild(document.createElement('td'));
-            //         td.innerHTML = data[j]['data_value'];
-            //     }else{
-            //         if(j === 5 ){
-            //             tr = tbody.appendChild(document.createElement('tr')); 
-            //         }
-            //         td = tr.appendChild(document.createElement('td'));
-            //         td.innerHTML = data[j]['data_value'];
-            //     }
-            // }
-            
-            // console.log(data);
             for(var j = 0; j < data.length / 5; j++){
                 var row = createRowTable(data);
+                console.table(row);
                 tr = tbody.appendChild(document.createElement('tr'));
-                //console.log(row);
                 tr.setAttribute("data-id-value", row[j].id);
-                
                 for(var t = 0; t < row.length; t++){
                     td = tr.appendChild(document.createElement('td'));
-                    td.innerHTML = row[t].data_value;
+                    td.innerHTML = row[t].value;
                 }
-                
+                //removeArr(data);
             }   
 
          
@@ -158,12 +143,17 @@ function createTableList2(nameWindow){
     }
      
 }
+function removeArr(data){
+    for (var i = 1; i < 6; i++) {
+        //data.splice(i,1);
+    }
+}
 //function criar row na tabela
 function createRowTable(data){
     var newArr = [];
     for (var i = 0; i < 5; i++) {
         newArr[i] = data[i];
-        data.splice(i,1);
+        //data.splice(i,1);
     }
     return newArr;
 }
@@ -184,7 +174,7 @@ function bodyTable(data){
 function headerTable(data){
     var newArr = [];
     for(var i = 0; i < 5; i++){
-        newArr[i] = data[i].label;
+        newArr[i] = data[i];
     }
     return newArr;
 }

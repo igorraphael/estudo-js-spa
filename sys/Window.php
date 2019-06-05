@@ -123,8 +123,10 @@ class Window{
         $sql = "SELECT I.descricao AS label, D.id, D.data_value FROM itens_janela AS I INNER JOIN data_varchar AS D ON I.id = D.id_iten_janela WHERE D.id_janela = $id ORDER BY D.id";
         $exe_query = mysqli_query($this->conn, $sql);
         if( mysqli_num_rows($exe_query) > 0 ){
-            while($row = mysqli_fetch_object($exe_query) ){
-                $result[] = $row;
+            //$res = array();
+            while($row = mysqli_fetch_array($exe_query) ){
+                //$result[] = $row;
+                $result[] = array("window" => $row['label'], "id_item" => $row['id'], "value" => $row['data_value']);
             }
         }
         $this->close;
