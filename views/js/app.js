@@ -39,7 +39,7 @@ function createHeader() {
 //create window
 function createWindow(nameWindow) {
     if(nameWindow == 'Tabela'){
-        createTableList2(nameWindow);
+        createTableList(nameWindow);
     }else{
         $.ajax({
             type: "POST",
@@ -91,7 +91,7 @@ function createWindow(nameWindow) {
 //end func    
 }
 
-function createTableList2(nameWindow){
+function createTableList(nameWindow){
     var table = $("table");
     if( table.length != 0 ){
         alert('Tabela abaixo..');
@@ -103,9 +103,7 @@ function createTableList2(nameWindow){
         data: { mod: 'window', action: 'getAllData', window: nameWindow },
         error: function () { alert("Não foi possível atender sua requisição."); },
         success: function (data, textStatus, jqXHR) {
-            console.table(data);
             var arrayHeaderTable = headerTable(data);
-            //console.table(arrayHeaderTable);
             var div, table, thead, tr, th, td, tbody;
             div = content.appendChild(document.createElement('div'));
             div.classList.add('div-table');
@@ -118,114 +116,53 @@ function createTableList2(nameWindow){
             thead.classList.add('thead-dark');
             tr = thead.appendChild(document.createElement('tr'));
             tr.classList.add('tr-table');
-            //arrayHeaderTable.push('Editar');
+            arrayHeaderTable.push('Editar');
             for(var i = 0; i < arrayHeaderTable.length; i++){
                 th =  tr.appendChild(document.createElement('th'));
-                th.innerHTML = arrayHeaderTable[i].window;
+                th.innerHTML = arrayHeaderTable[i];
             }
             //tbody
             tbody = table.appendChild(document.createElement('tbody'));
-            for(var j = 0; j < data.length / 5; j++){
+            let contRow = data.length / 5;
+            //row table tr, td.
+            for(var j = 0; j < contRow; j++){
                 var row = createRowTable(data);
-                console.table(row);
                 tr = tbody.appendChild(document.createElement('tr'));
-                tr.setAttribute("data-id-value", row[j].id);
+                tr.setAttribute("data-id-value", row[j].id_item);
                 for(var t = 0; t < row.length; t++){
                     td = tr.appendChild(document.createElement('td'));
                     td.innerHTML = row[t].value;
                 }
-                //removeArr(data);
             }   
-
-         
         }
     });
     }
      
 }
 function removeArr(data){
-    for (var i = 1; i < 6; i++) {
-        //data.splice(i,1);
+    for (var i = 0; i < 5; i++) {
+        data.shift();
     }
 }
 //function criar row na tabela
 function createRowTable(data){
-    var newArr = [];
+    let newArr = new Array();
     for (var i = 0; i < 5; i++) {
         newArr[i] = data[i];
-        //data.splice(i,1);
     }
+    removeArr(data);//remove row data
     return newArr;
 }
-//function para criar array do body
-function bodyTable(data){
-    //
-    var cont = data.length / 5;
-    var arr = new Array(cont);
-    var newData = data.map( function( elem ) {
-        return elem['data_value'];
-    } ); 
-    for (var i = 0; i < newData.length / 2; i++) {
-        arr = newData.splice(i, 1);         
-    }
-    return arr;
-}
-//function para criar o array do header
+
+//function para criar o header da tabela
 function headerTable(data){
-    var newArr = [];
+    var newArr = new Array();
     for(var i = 0; i < 5; i++){
-        newArr[i] = data[i];
+        newArr[i] = data[i].window;
     }
     return newArr;
 }
-function createTableList(){
-    var div, table, row, thead, tr, th, td, tbody;
-    var headTable = ['Nome', 'Login', 'Data', 'E-mail'];
-    div = content.appendChild(document.createElement('div'));
-    div.classList.add('wrap-table100');
-    //table
-    table = div.appendChild(document.createElement('TABLE'));
-    table.classList.add('table');
-    table.setAttribute("id", "myTable");
-    //thead
-    thead = table.appendChild(document.createElement('thead'));
-    tr = thead.appendChild(document.createElement('tr'));
-    tr.classList.add('table100-head');
-    for(var i = 0; i < headTable.length; i++){
-       th =  tr.appendChild(document.createElement('th'));
-       th.innerHTML = headTable[i];
-    }
-    //tbody
-    tbody = table.appendChild(document.createElement('tbody'));
-    tr = tbody.appendChild(document.createElement('tr'));
-    
-    
-    $.ajax({
-        type: "POST",
-        url: "",
-        data: { mod: 'window', action: 'getAllData', param: 'Cliente' },
-        error: function () { alert("Não foi possível atender sua requisição."); },
-        success: function (data, textStatus, jqXHR) {
-            console.log(data);
-        }
-    });
-    // for(var j = 0; j < 4; j++){
-        
-    //     td = tr.appendChild(document.createElement('td'));
-    //     td.innerHTML = 'xxxxxxx'+j;
-    // }
-    
 
-    // for (var i = 0; i < 10; i++) {
-    //     row = table.insertRow(0);
-    //     var cel = row.insertCell(0);
-    //     var cel1 = row.insertCell(1);
-    //     cel.innerHTML = 'TESTE '+i;
-    //     cel1.innerHTML = 't'+i;
-    // }
-    
-
-}
 function windowFocus(context) {
     $('.janela').css('zIndex', '0');
     $('.janela').css('opacity', '0.4');

@@ -47,9 +47,8 @@ class Window{
 
 
 //function request form and insert
-//$_POST['param'][0] Nome da janela.
     public function insertNewRow(){
-        //return $_POST['param'];
+    //$_POST['param'][0] Nome da janela.
         $idJanela = $this->getIdJanela($_POST['param'][0]);
         if(!$idJanela):
             return "error";
@@ -76,7 +75,7 @@ class Window{
         }
      return $msg;
     }
-
+//retorna id separado do value;
     public function extractId($item){
         $n = explode("[", $item);// $n[0] = dado informado pelo usuario.
         $n1 = explode("]", $n[1]); //$n1[0] = ID do campo na tabela.
@@ -84,7 +83,7 @@ class Window{
         return $newArray;
     }
     
-    //get id 
+//get id 
     public function getIdJanela($name){
         //var_dump($name);
         $sql = "SELECT * FROM janela WHERE descricao = '$name'";
@@ -100,7 +99,7 @@ class Window{
 
     }          
 
-//get data for table
+//get all data for table
     public function getAllData(){
         //nome da janela para pegar infos -> $_POST['window']
         $name = $_POST['window'];
@@ -123,7 +122,6 @@ class Window{
         $sql = "SELECT I.descricao AS label, D.id, D.data_value FROM itens_janela AS I INNER JOIN data_varchar AS D ON I.id = D.id_iten_janela WHERE D.id_janela = $id ORDER BY D.id";
         $exe_query = mysqli_query($this->conn, $sql);
         if( mysqli_num_rows($exe_query) > 0 ){
-            //$res = array();
             while($row = mysqli_fetch_array($exe_query) ){
                 //$result[] = $row;
                 $result[] = array("window" => $row['label'], "id_item" => $row['id'], "value" => $row['data_value']);
@@ -133,7 +131,7 @@ class Window{
         return $result;
     } 
 
-//functions db
+//function connect db
     public function connectDB(){
       	//DEV
 		$dbname = 'project';
