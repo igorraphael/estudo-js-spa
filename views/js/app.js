@@ -23,10 +23,10 @@ function createHeader() {
             // console.log(data);
             //var headerNav = ['Cadastro', 'Relatorio', 'Finanças'];
             var header = document.createElement('nav');
-            header.classList.add('header');
+            header.classList.add('header', 'bg-primary', 'text-white','p-2');
             for (var i = 0; i < data.length; i++) {
                 var a = document.createElement('a');
-                a.classList.add('nav-li');
+                a.classList.add('nav-li','nav-p');
                 a.onclick = function () { createWindow(this.innerHTML) }
                 a.innerHTML = data[i];
                 header.appendChild(a);

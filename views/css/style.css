@@ -11,25 +11,14 @@
 nav {
     width: 100%;
     height: 43px;
-    background-color: #0b98de;
-
 }
 
 nav a {
-    margin: 0 2px;
-    display: block;
-    float: left;
-    font-family: sans-serif;
     font-size: 18px;
-    color: white;
-    /* border: 1px solid #202020; */
-    text-decoration: none;
-    padding-top: 10px;
-    padding-right: 10px;
-    padding-bottom: 10px;
-    padding-left: 10px;
 }
-
+.nav-p{
+    padding:.8rem !important;
+}
 nav a:hover {
     background-color: #17b0cf;
 }
@@ -98,7 +87,6 @@ input {
 /* size table */
 .div-table {
     display:flex;
-   
     width: 70%;
 }
 
