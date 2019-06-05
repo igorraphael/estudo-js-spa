@@ -7,12 +7,10 @@ $(document).ready(function () {
     createHeader();
 
     //click nav menu 
-    $('.nav-li').on("click", function () {
-        alert('cliclou no ' + this.innerHTML);
-        createWindow();
-    });
-
-    
+    // $('.nav-li').on("click", function () {
+    //     alert('cliclou no ' + this.innerHTML);
+    //     createWindow();
+    // });
 });
 //function create header
 function createHeader() {
@@ -106,10 +104,10 @@ function createTableList(nameWindow){
             var arrayHeaderTable = headerTable(data);
             var div, table, thead, tr, th, td, tbody;
             div = content.appendChild(document.createElement('div'));
-            div.classList.add('div-table');
+            div.classList.add('div-table','mx-auto' );
             //table
             table = div.appendChild(document.createElement('TABLE'));
-            table.classList.add('table');
+            table.classList.add('table', 'mt-5');
             table.setAttribute("id", 'table-'+nameWindow+'');
             //thead
             thead = table.appendChild(document.createElement('thead'));
@@ -128,10 +126,11 @@ function createTableList(nameWindow){
             for(var j = 0; j < contRow; j++){
                 var row = createRowTable(data);
                 tr = tbody.appendChild(document.createElement('tr'));
-                tr.setAttribute("data-id-value", row[j].id_item);
+                tr.setAttribute("data-index-row", j);
                 for(var t = 0; t < row.length; t++){
                     td = tr.appendChild(document.createElement('td'));
                     td.innerHTML = row[t].value;
+                    td.setAttribute("data-id-item", row[t].id_item);
                 }
                 //buttons actions
                 let tdActions = tr.appendChild(document.createElement('td'));
@@ -139,7 +138,8 @@ function createTableList(nameWindow){
                 let btnEdit = tdActions.appendChild(document.createElement('button'));
                 btnDelete.innerHTML = '<i class="far fa-trash-alt"></i>';
                 btnDelete.classList.add('btnActionTable', 'mr-2', 'btn-danger');
-                btnDelete.onclick = function () { deleteRowTable(row[j].id_item) }
+                btnDelete.setAttribute("data-target", j);
+                btnDelete.onclick = function(){deleteRowTable( $(btnDelete).attr('data-target') );} //add event click no bottao 
                 btnEdit.innerHTML = '<i class="fas fa-edit"></i>';
                 btnEdit.classList.add('btnActionTable', 'mr-2', 'btn-warning');
             }   
@@ -148,9 +148,39 @@ function createTableList(nameWindow){
     }
      
 }
+
+
+
 //function para deletar linha da tabela
-function deleteRowTable(id){
-    alert('Deletar dados do ID'+id);
+function deleteRowTable(indexRow){
+    //let row = $("tr[data-index-row='"+indexRow+"'] td");
+    let idsArray = [];
+    $("tr[data-index-row='"+indexRow+"'] td").each(function(index) {
+        if( $(this).attr('data-id-item')   ){
+            idsArray[index] = $(this).attr('data-id-item');
+        }
+    });
+    
+    if(idsArray){
+        //console.log(idsArray);
+        $.ajax({
+            type: "POST",
+            url: "",
+            data: { mod: 'window', action: 'deleteDataArray', param: idsArray },
+            error: function () { alert("Não foi possível atender sua requisição."); },
+            success: function (data, textStatus, jqXHR){
+                if(data.indexOf('ok') != -1) {
+                    //retorno db = 'ok';
+                    $("tr[data-index-row='"+indexRow+"']").remove();
+                    alert('Registro deletado!');
+                }else{
+                    alert(data);
+                }
+            }
+        });
+    }else{
+        alert('Não a IDs no array, ERROR!');
+    }
 }
 
 //remove data

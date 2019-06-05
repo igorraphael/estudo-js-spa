@@ -44,7 +44,25 @@ class Window{
         $this->close;
         return $result;
     }
-
+//function delete data in db
+    public function deleteDataArray(){
+        //return $_POST['param'];
+        foreach ($_POST['param'] as $key => $value) {
+            //$t[$key] = "DELETE data_varchar WHERE id = $value";
+            $sql = "DELETE FROM data_varchar WHERE id = $value";
+            if (mysqli_query($this->conn, $sql)) {
+                $msg = "ok";
+            }else{
+                $msgError = "Error deleting record: " . mysqli_error($this->conn);
+                exit();
+            }
+        }
+        $this->close;//fecha connection db
+        if(!empty($msgError) ):
+            return $msgError;//se der erro retorna msg de error
+        endif;
+        return $msg;
+    }   
 
 //function request form and insert
     public function insertNewRow(){
