@@ -139,7 +139,6 @@ function createTableList(nameWindow){
                 let btnEdit = tdActions.appendChild(document.createElement('button'));
                 btnDelete.innerHTML = '<i class="far fa-trash-alt"></i>';
                 btnDelete.classList.add('btnActionTable', 'mr-2', 'btn-danger');
-                
                 btnDelete.onclick = function () { deleteRowTable(row[j].id_item) }
                 btnEdit.innerHTML = '<i class="fas fa-edit"></i>';
                 btnEdit.classList.add('btnActionTable', 'mr-2', 'btn-warning');
@@ -149,7 +148,7 @@ function createTableList(nameWindow){
     }
      
 }
-
+//function para deletar linha da tabela
 function deleteRowTable(id){
     alert('Deletar dados do ID'+id);
 }

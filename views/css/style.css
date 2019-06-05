@@ -8,12 +8,13 @@
 
 
 /* HEADER */
-nav{
+nav {
     width: 100%;
     height: 43px;
     background-color: #0b98de;
 
 }
+
 nav a {
     margin: 0 2px;
     display: block;
@@ -28,7 +29,8 @@ nav a {
     padding-bottom: 10px;
     padding-left: 10px;
 }
-nav a:hover{
+
+nav a:hover {
     background-color: #17b0cf;
 }
 
@@ -42,60 +44,76 @@ nav a:hover{
     border: solid 0.5px #696969;
 }
 
-h1{
+h1 {
     font-size: 28px;
 }
-input{
-    padding:5px;
+
+input {
+    padding: 5px;
     width: 100%;
     margin: 2px 0;
     border: solid 1px gray;
     border-radius: 3px;
 }
 
+/* msg input */
+.msg-error {
+    border: solid 1px red;
+}
+
 .myButton {
     display: flex;
     width: 100px;
-	background-color:#44c767;
-	border-radius:10px;
-	border:1px solid #18ab29;
-	cursor:pointer;
-	color:#ffffff;
-	font-size:17px;
-	padding: 5px;
-    text-decoration:none;
+    background-color: #44c767;
+    border-radius: 10px;
+    border: 1px solid #18ab29;
+    cursor: pointer;
+    color: #ffffff;
+    font-size: 17px;
+    padding: 5px;
+    text-decoration: none;
     justify-content: center;
     margin-left: 30%;
-    margin-top:15px;
+    margin-top: 15px;
     margin-bottom: 10px;
 }
+
 .myButton:hover {
-	background-color:#5cbf2a;
+    background-color: #5cbf2a;
 }
 
 
 /* botao close */
-.btn{
+.btn {
     margin-left: 91%;
     display: block;
     width: 25px;
     height: 25px;
 }
-.btn-close{
+
+.btn-close {
     background: url('../img/btn-close2.png') no-repeat;
 }
+
+/* size table */
+.div-table {
+    display:flex;
+   
+    width: 70%;
+}
+
+table {
+    border: solid 2px black;
+}
+
 /* btn actions table */
-.btnActionTable{
+.btnActionTable {
     border-radius: 5px;
     border: none;
     padding: 7px 14px;
     font-size: 15px;
 }
 
-.windowDisplayOff{
+.windowDisplayOff {
     display: none;
-}
-
-.msg-error{
-    border: solid 1px red;
 }
