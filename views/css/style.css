@@ -32,11 +32,6 @@ nav a:hover{
     background-color: #17b0cf;
 }
 
-/* CONTAINER */
-.container{
-    height: auto;
-    /* background-color:#F2F2F2; */
-}
 /* WINDOW */
 .window {
     border-radius: 5px;
@@ -88,6 +83,13 @@ input{
 }
 .btn-close{
     background: url('../img/btn-close2.png') no-repeat;
+}
+/* btn actions table */
+.btnActionTable{
+    border-radius: 5px;
+    border: none;
+    padding: 7px 14px;
+    font-size: 15px;
 }
 
 .windowDisplayOff{

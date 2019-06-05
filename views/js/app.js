@@ -133,12 +133,28 @@ function createTableList(nameWindow){
                     td = tr.appendChild(document.createElement('td'));
                     td.innerHTML = row[t].value;
                 }
+                //buttons actions
+                let tdActions = tr.appendChild(document.createElement('td'));
+                let btnDelete = tdActions.appendChild(document.createElement('button'));
+                let btnEdit = tdActions.appendChild(document.createElement('button'));
+                btnDelete.innerHTML = '<i class="far fa-trash-alt"></i>';
+                btnDelete.classList.add('btnActionTable', 'mr-2', 'btn-danger');
+                
+                btnDelete.onclick = function () { deleteRowTable(row[j].id_item) }
+                btnEdit.innerHTML = '<i class="fas fa-edit"></i>';
+                btnEdit.classList.add('btnActionTable', 'mr-2', 'btn-warning');
             }   
         }
     });
     }
      
 }
+
+function deleteRowTable(id){
+    alert('Deletar dados do ID'+id);
+}
+
+//remove data
 function removeArr(data){
     for (var i = 0; i < 5; i++) {
         data.shift();
