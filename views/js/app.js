@@ -152,19 +152,53 @@ function createTableList(nameWindow){
     }
      
 }
-
-function openModal(){
-    var fragment, div, contentModal, h5, footer;
-    fragment = document.createDocumentFragment();
+//function modal de edicao
+function openModal(array){
+    console.log(array);
+    var nameInputs = ['Nome Completo', 'E-mail', 'Login', 'Senha', 'Data Nascimento'];
+    var div, contentModal, h5, bodyModal, formEdit, footerModal;
     div = content.appendChild(document.createElement('div'));
     div.classList.add('modal');
     div.id = "modal";
-    contentModal = div.appendChild(document.createElement('div'));
+    var divDialog = div.appendChild(document.createElement('div'));
+    divDialog.classList.add('modal-dialog');
+    //contentModal
+    contentModal = divDialog.appendChild(document.createElement('div'));
     contentModal.classList.add('modal-content');
-    //contentModal.innerHTML = 'CONTENT MODAL';
-    h5 = contentModal.appendChild(document.createElement('h5'));
-    h5.innerHTML = 'h5 modal';
-   
+    //bodyModal
+    bodyModal = contentModal.appendChild(document.createElement('div'));
+    bodyModal.classList.add('modal-body');
+    //h5
+    h5 = bodyModal.appendChild(document.createElement('h5'));
+    h5.innerHTML = 'Editar dados';
+    h5.classList.add('modal-title');
+    formEdit = bodyModal.appendChild(document.createElement('form'));
+
+    //insert inputs
+    var input, label;
+        for(let i = 0; i < nameInputs.length; i++){
+            label = formEdit.appendChild(document.createElement('label'));
+            label.innerHTML = nameInputs[i];
+            input = formEdit.appendChild(document.createElement('input'));
+            if(nameInputs[i] == 'E-mail'){
+                input.setAttribute("type", "e-mail");
+            }else if(nameInputs[i] == 'Data Nascimento'){
+                input.setAttribute("type", "date");
+            }else if(nameInputs[i] == 'Senha'){
+                input.setAttribute("type", "text");
+                input.disabled = true;
+            }else{
+                input.setAttribute("type", "text");
+            }
+            input.value = array[i].value;
+        }
+    //footer modal
+    footerModal = contentModal.appendChild(document.createElement('div'));
+    footerModal.classList.add('modal-footer');
+    var btn1 = footerModal.appendChild(document.createElement('button'));
+    btn1.classList.add('btn', 'btn-secondary');
+    btn1.innerHTML = 'X';
+
     var modal = document.getElementById("modal"); 
     modal.style.display = 'block';
     
@@ -182,28 +216,16 @@ function editRowTable(indexRow){
     let dataArray = [];
     $("tr[data-index-row='"+indexRow+"'] td").each(function(index) {
         if( $(this).attr('data-id-item')   ){
-            dataArray[index] = $(this).text();
+            //dataArray[index] = $(this).text();
+            dataArray[index] = {
+                'id_item' : $(this).attr('data-id-item'),
+                'value' : $(this).text()
+            };
         }
     });
     
     if(dataArray){
-        openModal();
-        // var fragment, div, contentModal, h5, footer;
-        // //fragment = document.createDocumentFragment();
-        // fragment = content.appendChild(document.createElement('div'));
-        // fragment.classList.add('teste');
-        // fragment.setAttribute("aria-hidden", true);
-        // div = fragment.appendChild(document.createElement('div'));
-        // div.classList.add('modal', 'fade');
-        // // div.innerHTML = 'MODAL TESTE';
-        // contentModal = div.appendChild(document.createElement('div'));
-        // contentModal.classList.add('modal-content');
-        // h5 = contentModal.appendChild(document.createElement('h5'));
-        // h5.classList.add('modal-title');
-        // h5.innerHTML = 'Title modal';
-        // footer = div.appendChild(document.createElement('div'));
-        // footer.classList.add('modal-footer');
-        // footer.innerHTML = 'FOOTER MODAL';
+        openModal(dataArray);
     }else{
         alert('Não há dados no array, ERROR!');
     }
