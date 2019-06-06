@@ -72,14 +72,12 @@ input {
 }
 
 
-/* botao close */
-.btn {
-    margin-left: 91%;
-    display: block;
-    width: 25px;
-    height: 25px;
+
+.btnModalClose {
+    /* font-size: */
 }
 
+/* botao close */
 .btn-close {
     background: url('../img/btn-close2.png') no-repeat;
 }
@@ -114,7 +112,7 @@ table {
   }
 .modal-content {
     border-top: 4px solid #007bff !important;
-    margin: 15% auto; /* 15% from the top and centered */
+    margin: auto; /* 15% from the top and centered */
     padding-top:5px;
     /* border-top: 1px solid #dee2e6; */
 }

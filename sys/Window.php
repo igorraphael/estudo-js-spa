@@ -62,7 +62,27 @@ class Window{
             return $msgError;//se der erro retorna msg de error
         endif;
         return $msg;
-    }   
+    }
+    
+//function for update row table
+public function updateRowTable(){
+   for($i = 0; $i < count($_POST['param']); $i++ ){
+        $value = $_POST['param'][$i]['value'];
+        $id = $_POST['param'][$i]['id_item'];
+        $sql = "UPDATE data_varchar SET data_value = '$value' WHERE id = $id";
+            if (mysqli_query($this->conn, $sql)) {
+                $msg = "ok";
+            }else{
+                $msgError = "Error update record: " . mysqli_error($this->conn);
+                exit();
+            }    
+    }
+   $this->close;//fecha connection db
+    if(!empty($msgError) ):
+        return $msgError;//se der erro retorna msg de error
+    endif;
+    return $msg;
+}    
 
 //function request form and insert
     public function insertNewRow(){
@@ -89,7 +109,7 @@ class Window{
         if($contador > 1 ){
             $msg = "Foi inserido {$contador} dados!";
         }else{
-            $msg = "Foi inserido {$contador} dados!";
+            $msg = "ERROR!";
         }
      return $msg;
     }
