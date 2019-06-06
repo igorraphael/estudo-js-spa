@@ -136,12 +136,16 @@ function createTableList(nameWindow){
                 let tdActions = tr.appendChild(document.createElement('td'));
                 let btnDelete = tdActions.appendChild(document.createElement('button'));
                 let btnEdit = tdActions.appendChild(document.createElement('button'));
+                //btn delete 
                 btnDelete.innerHTML = '<i class="far fa-trash-alt"></i>';
                 btnDelete.classList.add('btnActionTable', 'mr-2', 'btn-danger');
                 btnDelete.setAttribute("data-target", j);
                 btnDelete.onclick = function(){deleteRowTable( $(btnDelete).attr('data-target') );} //add event click no bottao 
+                //btn edit
                 btnEdit.innerHTML = '<i class="fas fa-edit"></i>';
                 btnEdit.classList.add('btnActionTable', 'mr-2', 'btn-warning');
+                btnEdit.setAttribute("data-target", j);
+                btnEdit.onclick = function(){editRowTable( $(btnEdit).attr('data-target') );} //add event click no bottao 
             }   
         }
     });
@@ -149,8 +153,62 @@ function createTableList(nameWindow){
      
 }
 
+function openModal(){
+    var fragment, div, contentModal, h5, footer;
+    fragment = document.createDocumentFragment();
+    div = content.appendChild(document.createElement('div'));
+    div.classList.add('modal');
+    div.id = "modal";
+    contentModal = div.appendChild(document.createElement('div'));
+    contentModal.classList.add('modal-content');
+    //contentModal.innerHTML = 'CONTENT MODAL';
+    h5 = contentModal.appendChild(document.createElement('h5'));
+    h5.innerHTML = 'h5 modal';
+   
+    var modal = document.getElementById("modal"); 
+    modal.style.display = 'block';
+    
+    window.onclick = function(event) {
+        if (event.target == modal) {
+          modal.style.display = "none";
+        } 
+    }
+ 
+    
+}
 
-
+//function para editar lina da tabela
+function editRowTable(indexRow){
+    let dataArray = [];
+    $("tr[data-index-row='"+indexRow+"'] td").each(function(index) {
+        if( $(this).attr('data-id-item')   ){
+            dataArray[index] = $(this).text();
+        }
+    });
+    
+    if(dataArray){
+        openModal();
+        // var fragment, div, contentModal, h5, footer;
+        // //fragment = document.createDocumentFragment();
+        // fragment = content.appendChild(document.createElement('div'));
+        // fragment.classList.add('teste');
+        // fragment.setAttribute("aria-hidden", true);
+        // div = fragment.appendChild(document.createElement('div'));
+        // div.classList.add('modal', 'fade');
+        // // div.innerHTML = 'MODAL TESTE';
+        // contentModal = div.appendChild(document.createElement('div'));
+        // contentModal.classList.add('modal-content');
+        // h5 = contentModal.appendChild(document.createElement('h5'));
+        // h5.classList.add('modal-title');
+        // h5.innerHTML = 'Title modal';
+        // footer = div.appendChild(document.createElement('div'));
+        // footer.classList.add('modal-footer');
+        // footer.innerHTML = 'FOOTER MODAL';
+    }else{
+        alert('Não há dados no array, ERROR!');
+    }
+    
+}
 //function para deletar linha da tabela
 function deleteRowTable(indexRow){
     //let row = $("tr[data-index-row='"+indexRow+"'] td");
@@ -162,7 +220,6 @@ function deleteRowTable(indexRow){
     });
     
     if(idsArray){
-        //console.log(idsArray);
         $.ajax({
             type: "POST",
             url: "",
@@ -170,7 +227,6 @@ function deleteRowTable(indexRow){
             error: function () { alert("Não foi possível atender sua requisição."); },
             success: function (data, textStatus, jqXHR){
                 if(data.indexOf('ok') != -1) {
-                    //retorno db = 'ok';
                     $("tr[data-index-row='"+indexRow+"']").remove();
                     alert('Registro deletado!');
                 }else{
@@ -179,7 +235,7 @@ function deleteRowTable(indexRow){
             }
         });
     }else{
-        alert('Não a IDs no array, ERROR!');
+        alert('Não há IDs no array, ERROR!');
     }
 }
 
