@@ -9,18 +9,18 @@ $(document).ready(function () {
 
 
 
-function sendDataForUpdate(){
+function sendDataForUpdate() {
     var array = [];
-    $("form input:not(:disabled)").each(function(){//seleciona todos menos os marcados com disabled
+    $("form input:not(:disabled)").each(function () {//seleciona todos menos os marcados com disabled
         var input = $(this);
         var data = {
-            'id_item' : input.data("id-item"),
-            'value' : input.val()
+            'id_item': input.data("id-item"),
+            'value': input.val()
         }
         array.push(data);
     });
-    
-    if(array.length > 0){ 
+
+    if (array.length > 0) {
         $.ajax({
             type: "POST",
             url: "",
@@ -28,24 +28,24 @@ function sendDataForUpdate(){
             error: function () { alert("Não foi possível cadastrar cliente."); },
             success: function (data, textStatus, jqXHR) {
                 //console.log(data);
-                if(data.indexOf('ok') != -1) {
+                if (data.indexOf('ok') != -1) {
                     alert('Dados atualizados');
                     var modal = document.getElementById("modal");
-                    removerDOM( modal );
+                    removerDOM(modal);
                     location.reload();
-                }else{
+                } else {
                     alert(data);
                 }
             }
         });
-    }else{
+    } else {
         alert('Falta informar dados..');
     }
 }
 
 
 //function modal de edicao
-function openModal(array){
+function openModal(array) {
     var nameInputs = ['Nome Completo', 'E-mail', 'Login', 'Senha', 'Data Nascimento'];
     var div, contentModal, h5, bodyModal, formEdit, footerModal;
     div = content.appendChild(document.createElement('div'));
@@ -65,28 +65,28 @@ function openModal(array){
     h5.classList.add('modal-title');
     formEdit = bodyModal.appendChild(document.createElement('form'));
     formEdit.id = "Cliente";
-    formEdit.addEventListener("submit", function(evento){event.preventDefault(); sendDataForUpdate(); }); //add event default for submit form
+    formEdit.addEventListener("submit", function (evento) { event.preventDefault(); sendDataForUpdate(); }); //add event default for submit form
     //insert inputs
     var input, label;
-        for(let i = 0; i < nameInputs.length; i++){
-            label = formEdit.appendChild(document.createElement('label'));
-            label.innerHTML = nameInputs[i];
-            input = formEdit.appendChild(document.createElement('input'));
-            if(nameInputs[i] == 'E-mail'){
-                input.setAttribute("type", "e-mail");
-                input.disabled = true;
-            }else if(nameInputs[i] == 'Data Nascimento'){
-                input.setAttribute("type", "date");
-            }else if(nameInputs[i] == 'Senha'){
-                input.setAttribute("type", "text");
-                input.disabled = true;
-            }else{
-                input.setAttribute("type", "text");
-            }
-            input.setAttribute("data-id-item", array[i].id_item);
-            input.value = array[i].value;
-            
+    for (let i = 0; i < nameInputs.length; i++) {
+        label = formEdit.appendChild(document.createElement('label'));
+        label.innerHTML = nameInputs[i];
+        input = formEdit.appendChild(document.createElement('input'));
+        if (nameInputs[i] == 'E-mail') {
+            input.setAttribute("type", "e-mail");
+            input.disabled = true;
+        } else if (nameInputs[i] == 'Data Nascimento') {
+            input.setAttribute("type", "date");
+        } else if (nameInputs[i] == 'Senha') {
+            input.setAttribute("type", "text");
+            input.disabled = true;
+        } else {
+            input.setAttribute("type", "text");
         }
+        input.setAttribute("data-id-item", array[i].id_item);
+        input.value = array[i].value;
+
+    }
     //footer modal
     footerModal = formEdit.appendChild(document.createElement('div'));
     footerModal.classList.add('modal-footer');
@@ -96,146 +96,147 @@ function openModal(array){
     btnSalvar.innerHTML = 'Salvar';
     var btnClose = footerModal.appendChild(document.createElement('button'));
     btnClose.type = "button";
-    btnClose.classList.add('btn','btn-light', 'text-danger');
+    btnClose.classList.add('btn', 'btn-light', 'text-danger');
     btnClose.style.fontWeight = '600';
     btnClose.innerHTML = 'Fechar';
-    btnClose.addEventListener("click", function(){
-        var modal = document.getElementById("modal"); 
+    btnClose.addEventListener("click", function () {
+        var modal = document.getElementById("modal");
         //modal.style.display = "none";
         removerDOM(modal);
     });
-    var modal = document.getElementById("modal"); 
+    var modal = document.getElementById("modal");
     modal.style.display = 'block';
-    window.onclick = function(event) { //click na window
+    window.onclick = function (event) { //click na window
         if (event.target == modal) {
-          modal.style.display = "none";
-        } 
+            modal.style.display = "none";
+        }
     }
 }
 
 //function para editar lina da tabela
-function editRowTable(indexRow){
+function editRowTable(indexRow) {
     let dataArray = [];
-    $("tr[data-index-row='"+indexRow+"'] td").each(function(index) {
-        if( $(this).attr('data-id-item')   ){
+    $("tr[data-index-row='" + indexRow + "'] td").each(function (index) {
+        if ($(this).attr('data-id-item')) {
             //dataArray[index] = $(this).text();
             dataArray[index] = {
-                'id_item' : $(this).attr('data-id-item'),
-                'value' : $(this).text()
+                'id_item': $(this).attr('data-id-item'),
+                'value': $(this).text()
             };
         }
     });
-    
-    if(dataArray){
+
+    if (dataArray) {
         openModal(dataArray);
-    }else{
+    } else {
         alert('Não há dados no array, ERROR!');
     }
-    
+
 }
 //function para deletar linha da tabela
-function deleteRowTable(indexRow){
-    //let row = $("tr[data-index-row='"+indexRow+"'] td");
-    let idsArray = [];
-    $("tr[data-index-row='"+indexRow+"'] td").each(function(index) {
-        if( $(this).attr('data-id-item')   ){
-            idsArray[index] = $(this).attr('data-id-item');
-        }
-    });
-    
-    if(idsArray){
-        $.ajax({
-            type: "POST",
-            url: "",
-            data: { mod: 'window', action: 'deleteDataArray', param: idsArray },
-            error: function () { alert("Não foi possível atender sua requisição."); },
-            success: function (data, textStatus, jqXHR){
-                if(data.indexOf('ok') != -1) {
-                    $("tr[data-index-row='"+indexRow+"']").remove();
-                    alert('Registro deletado!');
-                }else{
-                    alert(data);
-                }
+function deleteRowTable(indexRow) {
+    let conf = confirm('Deseja realmente excluir esse registro?');
+    if (conf == true) {
+        let idsArray = [];
+        $("tr[data-index-row='" + indexRow + "'] td").each(function (index) {
+            if ($(this).attr('data-id-item')) {
+                idsArray[index] = $(this).attr('data-id-item');
             }
         });
-    }else{
-        alert('Não há IDs no array, ERROR!');
+        if (idsArray) {
+            $.ajax({
+                type: "POST",
+                url: "",
+                data: { mod: 'window', action: 'deleteDataArray', param: idsArray },
+                error: function () { alert("Não foi possível atender sua requisição."); },
+                success: function (data, textStatus, jqXHR) {
+                    if (data.indexOf('ok') != -1) {
+                        $("tr[data-index-row='" + indexRow + "']").remove();
+                        alert('Registro deletado!');
+                    } else {
+                        alert(data);
+                    }
+                }
+            });
+        } else {
+            alert('Não há IDs no array, ERROR!');
+        }
     }
 }
 
 //function para criar a table
-function createTableList(nameWindow){
+function createTableList(nameWindow) {
     var table = $("table");
-    if( table.length != 0 ){
+    if (table.length != 0) {
         alert('Tabela abaixo..');
-    }else{
+    } else {
         nameWindow = 'Cliente';
-    $.ajax({
-        type: "POST",
-        url: "",
-        data: { mod: 'window', action: 'getAllData', window: nameWindow },
-        error: function () { alert("Não foi possível atender sua requisição."); },
-        success: function (data, textStatus, jqXHR) {
-            var arrayHeaderTable = headerTable(data);
-            var div, table, thead, tr, th, td, tbody;
-            div = content.appendChild(document.createElement('div'));
-            div.classList.add('div-table','mx-auto' );
-            //table
-            table = div.appendChild(document.createElement('TABLE'));
-            table.classList.add('table', 'mt-5');
-            table.setAttribute("id", 'table-'+nameWindow+'');
-            //thead
-            thead = table.appendChild(document.createElement('thead'));
-            thead.classList.add('thead-dark');
-            tr = thead.appendChild(document.createElement('tr'));
-            tr.classList.add('tr-table');
-            arrayHeaderTable.push('Editar');
-            for(var i = 0; i < arrayHeaderTable.length; i++){
-                th =  tr.appendChild(document.createElement('th'));
-                th.innerHTML = arrayHeaderTable[i];
-            }
-            //tbody
-            tbody = table.appendChild(document.createElement('tbody'));
-            let contRow = data.length / 5;
-            //row table tr, td.
-            for(var j = 0; j < contRow; j++){
-                var row = createRowTable(data);
-                tr = tbody.appendChild(document.createElement('tr'));
-                tr.setAttribute("data-index-row", j);
-                for(var t = 0; t < row.length; t++){
-                    td = tr.appendChild(document.createElement('td'));
-                    td.innerHTML = row[t].value;
-                    td.setAttribute("data-id-item", row[t].id_item);
+        $.ajax({
+            type: "POST",
+            url: "",
+            data: { mod: 'window', action: 'getAllData', window: nameWindow },
+            error: function () { alert("Não foi possível atender sua requisição."); },
+            success: function (data, textStatus, jqXHR) {
+                var arrayHeaderTable = headerTable(data);
+                var div, table, thead, tr, th, td, tbody;
+                div = content.appendChild(document.createElement('div'));
+                div.classList.add('div-table', 'mx-auto');
+                //table
+                table = div.appendChild(document.createElement('TABLE'));
+                table.classList.add('table', 'mt-5');
+                table.setAttribute("id", 'table-' + nameWindow + '');
+                //thead
+                thead = table.appendChild(document.createElement('thead'));
+                thead.classList.add('thead-dark');
+                tr = thead.appendChild(document.createElement('tr'));
+                tr.classList.add('tr-table');
+                arrayHeaderTable.push('Editar');
+                for (var i = 0; i < arrayHeaderTable.length; i++) {
+                    th = tr.appendChild(document.createElement('th'));
+                    th.innerHTML = arrayHeaderTable[i];
                 }
-                //buttons actions
-                let tdActions = tr.appendChild(document.createElement('td'));
-                let btnDelete = tdActions.appendChild(document.createElement('button'));
-                let btnEdit = tdActions.appendChild(document.createElement('button'));
-                //btn delete 
-                btnDelete.innerHTML = '<i class="far fa-trash-alt"></i>';
-                btnDelete.classList.add('btnActionTable', 'mr-2', 'btn-danger');
-                btnDelete.setAttribute("data-target", j);
-                btnDelete.onclick = function(){deleteRowTable( $(btnDelete).attr('data-target') );} //add event click no bottao 
-                //btn edit
-                btnEdit.innerHTML = '<i class="fas fa-edit"></i>';
-                btnEdit.classList.add('btnActionTable', 'mr-2', 'btn-warning');
-                btnEdit.setAttribute("data-target", j);
-                btnEdit.onclick = function(){editRowTable( $(btnEdit).attr('data-target') );} //add event click no bottao 
-            }   
-        }
-    });
+                //tbody
+                tbody = table.appendChild(document.createElement('tbody'));
+                let contRow = data.length / 5;
+                //row table tr, td.
+                for (var j = 0; j < contRow; j++) {
+                    var row = createRowTable(data);
+                    tr = tbody.appendChild(document.createElement('tr'));
+                    tr.setAttribute("data-index-row", j);
+                    for (var t = 0; t < row.length; t++) {
+                        td = tr.appendChild(document.createElement('td'));
+                        td.innerHTML = row[t].value;
+                        td.setAttribute("data-id-item", row[t].id_item);
+                    }
+                    //buttons actions
+                    let tdActions = tr.appendChild(document.createElement('td'));
+                    let btnDelete = tdActions.appendChild(document.createElement('button'));
+                    let btnEdit = tdActions.appendChild(document.createElement('button'));
+                    //btn delete 
+                    btnDelete.innerHTML = '<i class="far fa-trash-alt"></i>';
+                    btnDelete.classList.add('btnActionTable', 'mr-2', 'btn-danger');
+                    btnDelete.setAttribute("data-target", j);
+                    btnDelete.onclick = function () { deleteRowTable($(btnDelete).attr('data-target')); } //add event click no bottao 
+                    //btn edit
+                    btnEdit.innerHTML = '<i class="fas fa-edit"></i>';
+                    btnEdit.classList.add('btnActionTable', 'mr-2', 'btn-warning');
+                    btnEdit.setAttribute("data-target", j);
+                    btnEdit.onclick = function () { editRowTable($(btnEdit).attr('data-target')); } //add event click no bottao 
+                }
+            }
+        });
     }
-     
+
 }
 
 //remove data
-function removeArr(data){
+function removeArr(data) {
     for (var i = 0; i < 5; i++) {
         data.shift();
     }
 }
 //function criar row na tabela
-function createRowTable(data){
+function createRowTable(data) {
     let newArr = new Array();
     for (var i = 0; i < 5; i++) {
         newArr[i] = data[i];
@@ -245,15 +246,15 @@ function createRowTable(data){
 }
 
 //function para criar o header da tabela
-function headerTable(data){
+function headerTable(data) {
     var newArr = new Array();
-    for(var i = 0; i < 5; i++){
+    for (var i = 0; i < 5; i++) {
         newArr[i] = data[i].window;
     }
     return newArr;
 }
 //function para remover html do DOM.
-function removerDOM(context){
+function removerDOM(context) {
     context.parentNode.removeChild(context);//remove div DOM.
 }
 
@@ -280,29 +281,29 @@ function onlyNumbers(e) {
 }
 
 
-function nameInput(title_campo){
+function nameInput(title_campo) {
     var titleReturn = title_campo.split(" ");
     return titleReturn[0].toLowerCase();
 }
 
-function sendForm(nameForm){
+function sendForm(nameForm) {
     var error = 0;
     var array = [];
     array.push(nameForm);
-    $("form input").each(function(){
+    $("form input").each(function () {
         var input = $(this);
-        if(input.val() == ''){
-            input.addClass('msg-error');   
+        if (input.val() == '') {
+            input.addClass('msg-error');
             error++;
-        }else{
-            if(input.attr('type') != 'submit'){
-                var data = input.val()+'['+input.data("iten")+']';
-                array.push( data );
+        } else {
+            if (input.attr('type') != 'submit') {
+                var data = input.val() + '[' + input.data("iten") + ']';
+                array.push(data);
             }
-            
+
         }
     });
-    if(error == 0){ //if error 0 send submit
+    if (error == 0) { //if error 0 send submit
         $.ajax({
             type: "POST",
             url: "",
@@ -315,7 +316,7 @@ function sendForm(nameForm){
                 alert(data);
             }
         });
-    }else{
+    } else {
         alert('Falta informar dados..');
     }
 }
@@ -329,10 +330,10 @@ function createHeader() {
             // console.log(data);
             //var headerNav = ['Cadastro', 'Relatorio', 'Finanças'];
             var header = document.createElement('nav');
-            header.classList.add('header', 'bg-primary', 'text-white','p-2');
+            header.classList.add('header', 'bg-primary', 'text-white', 'p-2');
             for (var i = 0; i < data.length; i++) {
                 var a = document.createElement('a');
-                a.classList.add('nav-li','nav-p');
+                a.classList.add('nav-li', 'nav-p');
                 a.onclick = function () { createWindow(this.innerHTML) }
                 a.innerHTML = data[i];
                 header.appendChild(a);
@@ -344,44 +345,44 @@ function createHeader() {
 
 //create window
 function createWindow(nameWindow) {
-    if(nameWindow == 'Tabela'){
+    if (nameWindow == 'Tabela') {
         createTableList(nameWindow);
-    }else{
+    } else {
         $.ajax({
             type: "POST",
             url: "",
             data: { mod: 'window', action: 'getWindows', param: nameWindow },
             error: function () { alert("Não foi possível atender sua requisição."); },
             success: function (data, textStatus, jqXHR) {
-                if(data.indexOf('Nenhum') != -1) { //Caso não exista campos para criar janela..
+                if (data.indexOf('Nenhum') != -1) { //Caso não exista campos para criar janela..
                     alert(data);
-                }else{
+                } else {
                     //fragmento-div
                     var nWindowFull = data[0].nJanela.replace(/ /g, "_");
                     var fragment, div, i, campo, h1, form, btnClose;
                     fragment = document.createDocumentFragment();
                     div = fragment.appendChild(document.createElement('div'));
-                    btnClose = div.appendChild( document.createElement('span') );
-                    btnClose.onclick = function(){ closeWindow(this.parentNode, nWindowFull);}
+                    btnClose = div.appendChild(document.createElement('span'));
+                    btnClose.onclick = function () { closeWindow(this.parentNode, nWindowFull); }
                     btnClose.classList.add('btn', 'btn-close');
-                    div.setAttribute("id", nWindowFull );
+                    div.setAttribute("id", nWindowFull);
                     div.classList.add('window');
                     h1 = div.appendChild(document.createElement('h1'));
                     h1.innerHTML = data[0]['nJanela'];
                     form = div.appendChild(document.createElement('form'));
                     form.classList.add('form');
                     form.setAttribute("id", nWindowFull);
-                    form.addEventListener("submit", function(evento){evento.preventDefault();sendForm(data[0].nJanela, data[0].id_janela);}); //add event default for submit form
+                    form.addEventListener("submit", function (evento) { evento.preventDefault(); sendForm(data[0].nJanela, data[0].id_janela); }); //add event default for submit form
                     var nameForm = data[0].nJanela; //.replace(/ /g, "_").toLowerCase();
                     form.setAttribute('name', nameForm);
                     form.setAttribute('data-id-window', data[0].id_janela);
                     for (i = 0; i < data.length; i++) {
                         campo = form.appendChild(document.createElement(data[i]['field_element']));
-                        campo.setAttribute('type', data[i]['field_type'] );
+                        campo.setAttribute('type', data[i]['field_type']);
                         campo.name = nameInput(data[i]['descricao']);
                         campo.setAttribute('data-iten', data[i]['id']);
                         campo.placeholder = data[i]['descricao'];
-                        if(data[i]['field_element'] == 'button'){
+                        if (data[i]['field_element'] == 'button') {
                             campo.classList.add('myButton');
                             campo.innerHTML = data[i]['descricao'];
                         }
@@ -392,7 +393,7 @@ function createWindow(nameWindow) {
             }
         });
     }
-//end func    
+    //end func    
 }
 
 
