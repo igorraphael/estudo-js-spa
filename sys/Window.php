@@ -32,7 +32,7 @@ class Window{
 
     public function getWindows(){
         $nameWindow = $_POST['param'];
-        $sql = "SELECT J.id AS id_janela,J.descricao AS nJanela, I.descricao, I.field_element, I.field_type, I.id, I.position_form FROM janela AS J INNER JOIN itens_janela AS I ON I.id_janela = J.id WHERE J.descricao = '$nameWindow' ORDER BY I.position_form ASC";
+        $sql = "SELECT J.id AS id_janela, I.ref_type_table, J.descricao AS nJanela, I.descricao, I.field_element, I.field_type, I.id, I.position_form FROM janela AS J INNER JOIN itens_janela AS I ON I.id_janela = J.id WHERE J.descricao = '$nameWindow' ORDER BY I.position_form ASC";
         $exe_query = mysqli_query($this->conn, $sql);
         if( mysqli_num_rows($exe_query) > 0 ){
             while($row = mysqli_fetch_object($exe_query) ){
@@ -86,7 +86,7 @@ public function updateRowTable(){
 
 //function request form and insert
     public function insertNewRow(){
-    //$_POST['param'][0] Nome da janela.
+    //return $_POST['param'][5]['ref'];
         $idJanela = $this->getIdJanela($_POST['param'][0]);
         if(!$idJanela):
             return "error";
@@ -95,15 +95,20 @@ public function updateRowTable(){
         $contador = 0;
         array_splice($_POST['param'], 0, 1); //Remove o nome da janela.
         for ($i=0; $i < count($_POST['param']); $i++) { 
-            $data_id = $this->extractId($_POST['param'][$i]);
-            $id = $data_id[1];
-            $data = $data_id[0];
-            $sql = "INSERT INTO data_varchar (id_janela, id_iten_janela, data_value) VALUES ('".$idJanela['id']."', '$id', '$data')";
+            //$data_id = $this->extractId($_POST['param'][$i]);
+            $ref = $_POST['param'][$i]['ref'];
+            $id = $_POST['param'][$i]['id_iten'];
+            $data = $_POST['param'][$i]['value'];
+            if($ref == '1'){
+                $sql = "INSERT INTO data_varchar (id_janela, id_iten_janela, data_value) VALUES ('".$idJanela['id']."', '$id', '$data')";
+            }else{
+                $sql = "INSERT INTO data_int (id_janela, id_iten_janela, data_value) VALUES ('".$idJanela['id']."', '$id', '$data')";
+            }
+            //$sql = "INSERT INTO data_varchar (id_janela, id_iten_janela, data_value) VALUES ('".$idJanela['id']."', '$id', '$data')";
             $exe_query = mysqli_query($this->conn, $sql);
             if($exe_query){
                 $contador += 1;
             }
-            //
         }
 
         if($contador > 1 ){

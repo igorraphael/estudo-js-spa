@@ -297,7 +297,12 @@ function sendForm(nameForm) {
             error++;
         } else {
             if (input.attr('type') != 'submit') {
-                var data = input.val() + '[' + input.data("iten") + ']';
+                //var data = input.val() + '[' + input.data("iten") + ']';
+                var data = {
+                    'ref' : input.data("ref-type"),
+                    'id_iten' : input.data("iten"),
+                    'value': input.val()
+                }
                 array.push(data);
             }
 
@@ -372,7 +377,7 @@ function createWindow(nameWindow) {
                     form = div.appendChild(document.createElement('form'));
                     form.classList.add('form');
                     form.setAttribute("id", nWindowFull);
-                    form.addEventListener("submit", function (evento) { evento.preventDefault(); sendForm(data[0].nJanela, data[0].id_janela); }); //add event default for submit form
+                    form.addEventListener("submit", function (evento) { evento.preventDefault(); sendForm(data[0].nJanela); }); //add event default for submit form
                     var nameForm = data[0].nJanela; //.replace(/ /g, "_").toLowerCase();
                     form.setAttribute('name', nameForm);
                     form.setAttribute('data-id-window', data[0].id_janela);
@@ -381,6 +386,7 @@ function createWindow(nameWindow) {
                         campo.setAttribute('type', data[i]['field_type']);
                         campo.name = nameInput(data[i]['descricao']);
                         campo.setAttribute('data-iten', data[i]['id']);
+                        campo.setAttribute('data-ref-type', data[i]['ref_type_table']);
                         campo.placeholder = data[i]['descricao'];
                         if (data[i]['field_element'] == 'button') {
                             campo.classList.add('myButton');
