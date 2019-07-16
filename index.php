@@ -2,7 +2,7 @@
     //init.php
     $_PATH['root'] = $_SERVER['DOCUMENT_ROOT'] . '/project/';
     $_PATH['sys'] = $_PATH['root'] . 'sys/';
-    $_PATH['views'] = $_PATH['root'] . 'views/';
+    
 
     require_once('autoloader.php');
  
@@ -31,6 +31,6 @@
 
 
     header('Content-type: text/html; charset=utf-8');
-    require_once($_PATH['views'] . (isset($_page) ? $_page : 'index.html'));
+    require_once('views/' . (isset($_page) ? $_page : 'index.html'));
 
     exit;

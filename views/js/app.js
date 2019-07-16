@@ -174,9 +174,10 @@ function createTableList(nameWindow) {
         $.ajax({
             type: "POST",
             url: "",
-            data: { mod: 'window', action: 'getAllData', window: nameWindow },
+            data: { mod: 'window', action: 'getAllData', param: 'Cliente'},
             error: function () { alert("Não foi possível atender sua requisição."); },
             success: function (data, textStatus, jqXHR) {
+                console.log(data);
                 var arrayHeaderTable = headerTable(data);
                 var div, table, thead, tr, th, td, tbody;
                 div = content.appendChild(document.createElement('div'));
@@ -228,6 +229,87 @@ function createTableList(nameWindow) {
     }
 
 }
+
+
+//function para criar a table
+function createTableList2(nameWindow) {
+    var table = $("table");
+    if (table.length != 0) {
+        alert('Tabela abaixo..');
+    } else {
+        nameWindow = 'Cliente';
+        $.ajax({
+            type: "POST",
+            url: "",
+            data: { mod: 'window', action: 'getHeader', window: nameWindow },
+            error: function () { alert("Não foi possível atender sua requisição."); },
+            success: function (data, textStatus, jqXHR) {
+                var div, table, thead, tr, th;
+                div = content.appendChild(document.createElement('div'));
+                div.classList.add('div-table', 'mx-auto');
+                //table
+                table = div.appendChild(document.createElement('TABLE'));
+                table.classList.add('table', 'mt-5');
+                table.setAttribute("id", 'table-' + nameWindow + '');
+                //thead
+                thead = table.appendChild(document.createElement('thead'));
+                thead.classList.add('thead-dark');
+                tr = thead.appendChild(document.createElement('tr'));
+                tr.classList.add('tr-table');
+                //header table. 
+                for (var i = 0; i < data.length; i++) {
+                    th = tr.appendChild(document.createElement('th'));
+                    th.innerHTML = data[i]['name'];
+                }
+                createDataTable();
+            }
+        });
+    }
+
+}
+
+//funcao para criar as linhas da tabela
+function createDataTable(){
+    $.ajax({
+        type: "POST",
+        url: "",
+        data: { mod: 'window', action: 'getAllDataCliente' },
+        error: function () { alert("Não foi possível atender sua requisição."); },
+        success: function (data, textStatus, jqXHR) {
+            console.log(data);
+                var  td, tr, tbody, table;
+                table = document.getElementById('table-Cliente');
+                tbody = table.appendChild(document.createElement('tbody'));
+                let contRow = data.length / 5;
+                //row table tr, td.
+                for (var j = 0; j < contRow; j++) {
+                    //var row = createRowTable(data);
+                    tr = tbody.appendChild(document.createElement('tr'));
+                    tr.setAttribute("data-index-row", j);
+                    for (var t = 0; t < row.length; t++) {
+                        td = tr.appendChild(document.createElement('td'));
+                        td.innerHTML = row[t].value;
+                        td.setAttribute("data-id-item", row[t].id_item);
+                    }
+                    //buttons actions
+                    let tdActions = tr.appendChild(document.createElement('td'));
+                    let btnDelete = tdActions.appendChild(document.createElement('button'));
+                    let btnEdit = tdActions.appendChild(document.createElement('button'));
+                    //btn delete 
+                    btnDelete.innerHTML = '<i class="far fa-trash-alt"></i>';
+                    btnDelete.classList.add('btnActionTable', 'mr-2', 'btn-danger');
+                    btnDelete.setAttribute("data-target", j);
+                    btnDelete.onclick = function () { deleteRowTable($(btnDelete).attr('data-target')); } //add event click no bottao 
+                    //btn edit
+                    btnEdit.innerHTML = '<i class="fas fa-edit"></i>';
+                    btnEdit.classList.add('btnActionTable', 'mr-2', 'btn-warning');
+                    btnEdit.setAttribute("data-target", j);
+                    btnEdit.onclick = function () { editRowTable($(btnEdit).attr('data-target')); } //add event click no bottao 
+                }
+        }
+    });
+}
+
 
 //remove data
 function removeArr(data) {
@@ -351,7 +433,8 @@ function createHeader() {
 //create window
 function createWindow(nameWindow) {
     if (nameWindow == 'Tabela') {
-        createTableList(nameWindow);
+        //createTableList(nameWindow);
+        createTableList2(nameWindow);
     } else {
         $.ajax({
             type: "POST",
@@ -377,7 +460,7 @@ function createWindow(nameWindow) {
                     form = div.appendChild(document.createElement('form'));
                     form.classList.add('form');
                     form.setAttribute("id", nWindowFull);
-                    form.addEventListener("submit", function (evento) { evento.preventDefault(); sendForm(data[0].nJanela); }); //add event default for submit form
+                    form.addEventListener("submit", function (evento) { evento.preventDefault(); sendForm(data[0].nJanela);}); //add event default for submit form
                     var nameForm = data[0].nJanela; //.replace(/ /g, "_").toLowerCase();
                     form.setAttribute('name', nameForm);
                     form.setAttribute('data-id-window', data[0].id_janela);
@@ -401,7 +484,3 @@ function createWindow(nameWindow) {
     }
     //end func    
 }
-
-
-
-
